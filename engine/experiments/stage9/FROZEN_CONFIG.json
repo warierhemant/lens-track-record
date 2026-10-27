@@ -1,0 +1,366 @@
+{
+ "schema": "lens.stage9.config/1",
+ "config_id": "stage9-holdout-v2",
+ "written": "2026-10-20; revised 2026-10-21 for Emily's rulings of 2026-10-21 (package section 0b); values re-derived 2026-10-21 by engine/scripts/stage9_refit.py (B1 d); refreshed 2026-10-21 (runbook gaps G4, G8 and Emily's display ruling): post-cutoff count 12, stale status strings cleared, display_rule_98 gated on C98",
+ "status": "The Stage 9 frozen config (package section 2.10). seal-config refuses while any value is still the placeholder string; package section 7.2 lists the values still open. A sealed config is never edited.",
+ "internal_benchmark": false,
+ "ledger": {
+  "path": "engine/experiments/stage9/ledger.sqlite"
+ },
+ "bootstrap": {
+  "n_boot": 2000,
+  "seed": 9000
+ },
+ "primary": {
+  "L_bar": 0.171,
+  "parity_bar": 0.198,
+  "pass_rule": "ci_lower"
+ },
+ "s2": {
+  "margin_nats": 0.0075
+ },
+ "s3": {
+  "slope_lo": 0.8,
+  "slope_hi": 1.25,
+  "ece_min_n": 1500
+ },
+ "s4": {
+  "threshold": 0.4905,
+  "null_call_max": 0.05,
+  "identical_ahead_max": 0.05,
+  "decided_base_rate": 0.248,
+  "fit": {
+   "rule": "Emily's ruling 2 (2026-10-21): the sealed Learn-then-Test rule unchanged (H0 null call rate >= 0.05, exact binomial, delta 0.10, fixed sequence from the top down) on an EXTENDED grid: t = 0.4999 down to 0.4901 in 0.0001 steps (p >= 0.9999 ... p >= 0.9901), then the sealed 0.49 down to 0.01 in 0.01 steps. t_S4 = the lowest t rejected before the first failure. If the top of the grid already fails, S4 fails honestly (t_S4 = 0.5) and the product shows the null call rate beside every confident call. The 5% is not loosened. Non-holdout cross-fitted predictions only, decided before any holdout read",
+   "data": "the refit's pooled test-part non-significant null pairs of STACK (26,442) and decided pairs (8,664), mean z over splits, read only from the refit ledger (engine/experiments/stack_gate/refit_nf4r/ledger.sqlite, head 7035e628eaa8dfe3...)",
+   "result": "PASS: t_S4 = 0.4905 (p >= 0.9905); null call rate 4.80%; coverage 30.1% of decided pairs (2,606 of 8,664), right on 99.8%; re-derived 2026-10-21 (B1 d) on the refit; the gate's t_S4 was 0.4913",
+   "sealed_grid_result": "the sealed grid (0.49 down) on the refit returned 0.5",
+   "n_null_nonsig": 26442,
+   "file": "engine/experiments/stack_gate/refit_nf4r/s4_extended.json",
+   "file_sha256": "c9a68292e2d2271024d83485be23105f8dad6d3d313a90de71c0cc98768638e6",
+   "code": "engine/experiments/stack_gate/s4_extended.py",
+   "code_sha256": "affd66db3475c643fa8a13880f079cdc762975773c887d0ecf3fd3b60441e97b"
+  }
+ },
+ "c98": {
+  "target_accuracy": 0.98,
+  "pass_rule": "ci_lower",
+  "min_calls": 50,
+  "source": "R-0 v2 plan dbadebd0 rule 4b (RESUME.md 2026-10-15)",
+  "fit": {
+   "path": "engine/experiments/stack_gate/refit_nf4r/results_oof_ensemble_t98.json",
+   "sha256": "6f2708de0aba0e7f4295924666e3c035556e4efc009a13d070c2585e124fb97f",
+   "threshold_full": 0.41,
+   "threshold_base": 0.41,
+   "refit_note": "re-derived 2026-10-21 (B1 d) with stage9_values.py from the refit pooled test-part predictions (g81n NF4-retrain readouts), before any holdout read; the gate's values were 0.41 / 0.41"
+  }
+ },
+ "s5": {
+  "target_accuracy": 0.8611,
+  "basis": "refit pooled decided-pair accuracy 0.9179 [0.9111, 0.9251] on 8664 pairs; always-control 0.6161; target = max(CI lower - 0.05, always-control + 0.05) = 0.8611 (re-derived 2026-10-21, B1 d; the gate's target was 0.8631; file engine/experiments/stack_gate/refit_nf4r/stage9_values.json)"
+ },
+ "s6": {
+  "plan_id": "customer-v1",
+  "checkpoints": [
+   40,
+   80,
+   160,
+   320,
+   640
+  ],
+  "alpha_per_look": [
+   0.01,
+   0.01,
+   0.01,
+   0.01,
+   0.01
+  ],
+  "plan_sha256": "d0884d21345afa5cd11c86044e316c62dc42a0aef2622afe21dcd4ebdce9ffae"
+ },
+ "extra": {
+  "kappa_matched": {
+   "coverage": 0.49,
+   "external_kappa": 0.31,
+   "source": "Squoosh, arXiv 2608.07517: kappa 0.31 on the 49% its vote gate answers"
+  },
+  "reliability": {
+   "n_bins": 10
+  },
+  "confidence_auroc": {
+   "label": "descriptive"
+  },
+  "ece": {
+   "label": "descriptive",
+   "min_n": "s3.ece_min_n"
+  }
+ },
+ "frontier_arms": {
+  "opus_5_5_zero_shot": {
+   "model": "claude-opus-5-5",
+   "task": "best-of-k letter pick, both orders (fwd, rev) per test, scores = mean of the two picks; plus the 300-test recognition probe",
+   "prompt_source": "engine/experiments/8_1/frontier_arm.py PROMPT and RECOG",
+   "prompt_sha256": "1a50b6346ee8012ab83dcd6a33345d4336f60c060c5af5327132128d5e8fcdbe",
+   "recog_sha256": "9a63cc3d5d17996e520b5fd04b447820ba2a45bd669e6a741a3f5ab96058b7d3",
+   "max_tokens": 512,
+   "effort": "low",
+   "api": "Batch",
+   "expected_usd": 5,
+   "worst_usd": 9
+  },
+  "sonnet_5_5_zero_shot": {
+   "model": "claude-sonnet-5-5",
+   "task": "as the Opus arm (the 8.1 B7 design, for continuity with dev G3)",
+   "prompt_source": "engine/experiments/8_1/frontier_arm.py PROMPT and RECOG",
+   "prompt_sha256": "1a50b6346ee8012ab83dcd6a33345d4336f60c060c5af5327132128d5e8fcdbe",
+   "recog_sha256": "9a63cc3d5d17996e520b5fd04b447820ba2a45bd669e6a741a3f5ab96058b7d3",
+   "max_tokens": 512,
+   "effort": "low",
+   "api": "Batch",
+   "expected_usd": 1,
+   "worst_usd": 5
+  },
+  "endpoint": "F1 per arm: paired best-of-k accuracy, Lens minus arm, cluster bootstrap by test id (n_boot, seed 9000). 'Lens beats <arm>' only if the 95% CI lower bound > 0. Reported after the hierarchy, labelled provisional",
+  "dropped": {
+   "sonnet_8x2_panel": "adds nothing to any endpoint (S2 tests describe only); about 90 USD (Emily's decision 2)"
+  },
+  "implementation_sha256": "20b91892de8619fa5e3cdbbf7f8aae922296743b6800e06d801d64b571d03b67",
+  "implementation": "engine/lens_engine/stage9/precollect.py (request builder, chunk plan, spend rule, parser, scores, load_results with the partial rule) + runner._frontier_fields + stage9_analysis.frontier_endpoint; amendment research/stage9/AMEND_text_only_precollection.json (sealed by its own approved_to_run step before any holdout text read, package section 4 step C)"
+ },
+ "credit": {
+  "reserve_usd": 70,
+  "worst_case_usd": 68,
+  "spend_cap_usd": 68,
+  "cap_rule": "option A (owner, 2026-10-23): the 68 USD approved ceiling caps ACTUAL spend: before each chunk of at most 5,000 requests, actual spend so far (collected usage tokens x pinned Batch prices) + that chunk's expected cost must be <= 68 USD, else the pre-collection stops (stage9_pre:STOPPED) and the partial-collection rule applies (precollect.SPEND_RULE, PARTIAL_RULE). worst_case_usd keeps the approved 68 USD the validator requires (reserve >= it); the computed worst case is information only",
+  "expected_usd": 35,
+  "basis": "READINESS_2026-10-20 section 2: expected A (Opus describe, Batch) + B (Opus 5.5 zero-shot) + C (Sonnet 5.5 zero-shot) = 28 + 5 + 1, per request precollect.EXPECTED_USD; at the first build's counts (17,761 describes, 5,220 requests per frontier arm) 35.12 USD",
+  "computed_worst_case_usd_info": "136.94 (the superseded first build, 2026-10-23; sealed again by the re-build as information only)",
+  "promo_credit_left_usd": 70.25,
+  "promo_credit_note": "console read 2026-10-23: US$70.25 promotional, US$0 purchased, no card on file; the prepaid credit is the hard ceiling",
+  "no_other_opus_before_stage9": "Emily's ruling 6 (2026-10-21): nothing else may use Opus (or any paid Claude call on this credit) before Stage 9's pre-collection has run. Any other spend needs a top-up first",
+  "check_point": "B4 (ruling 4): the reserve check runs in the pre-collection build (precollect.gate_credit) BEFORE the holdout text is read, and its value is sealed in stage9_pre:BUILD; submit re-checks the reserve at the first chunk; a holdout predict then checks that sealed value and the pre-collection head (runner._gate_paid), not a new credit figure"
+ },
+ "label": {
+  "rule": "provisional while the post-Opus-cutoff (June 2026) set has fewer than 100 decided pairs",
+  "min_post_cutoff_decided_pairs": 100,
+  "post_cutoff_decided_pairs_at_sealing": 12,
+  "post_cutoff_basis": "research/accuracy/POSTCUTOFF_GROWTH_2026-10-21.md (PR #110): 25 post-cutoff pairs, 12 decided (8.7's 9, plus JMIR e88577 1 TRAIN-OK and NextAfter 2 TEST-ONLY; 10 decided if TEST-ONLY is excluded); a retrospective count, 0 overlaps with the holdout text hashes. The label stays provisional until 100"
+ },
+ "model": {
+  "stack_id": "lens-stack-gemma4-31b-voyage4-opus-describe-ens10-v1",
+  "stack_sha256": "94ed011ee886033333188e917b437cf6994e4b9829d6c8b080a5c942d8e5c3bc",
+  "text_only_stack_id": "lens-stack-gemma4-31b-voyage4-ens10-v1 (STACK_no_describe of the same 10 splits)",
+  "interface": "lens_engine.stage9.models.StackedModel",
+  "design": "Path 2 (Emily's decision 1): the GATED 10-split ensemble of the stack gate. For a holdout pair, z = mean over splits s = 0..9 of z_s(b over a), z_s = split s's frozen stacker (frozen_design of the stack gate's describe_decision) on split s's Gemma 4 31B LoRA scorer (the adapters of model.learner_rule) + split s's voyage-4 learner (+ one Opus describe per pair if describe is KEPT). p = sigmoid(z); arm scores = Bradley-Terry strengths of the within-test round robin of z. No fresh final adapter is scored",
+  "scorer_base": {
+   "repo": "google/gemma-4-31B",
+   "revision": "5bbc2fb1c1b2c611d06e3d9f23c170ba21659d89",
+   "selection": "engine/experiments/8_1c/SELECTION_REPORT.md (mean L 0.304, PASS_full)"
+  },
+  "frozen_design": "STACK",
+  "stack_artifact": {
+   "path": "engine/experiments/stack_gate/refit_nf4r/ensemble.json",
+   "built_by": "lens_engine.stage9.ensemble.build_frozen from the REFIT ledger (engine/scripts/stage9_refit.py: the sealed stack gate procedure on the g81n NF4-retrain TEST-part readouts)",
+   "implementation_sha256": "696b1ef59d181cdc493faa4761a6cded193e1c4459910df4c2d2f2e8729515db",
+   "stack_gate_ledger_head_after_evaluate": "7035e628eaa8dfe37dc35feb2ad8a4f7cb1973dbc7a0f2ba476e45fef057101e",
+   "replay_check": "engine/experiments/stack_gate/refit_nf4r/replay_check.json (173 per-split predictions reproduced, max abs diff 0.0)",
+   "refit_of_sealed_gate_ledger_head": "55a8701c7e2105aa8e84ee35fa16220c8957598f596f1887367683cc1a07e6a7"
+  },
+  "gate_stack_sha256": "0d87a15fef22e52769412b5bab70efc8c55184cb2918e111dfdc5bff83d86faa",
+  "learner_rule": {
+   "ruling": "Emily's ruling 1, 2026-10-21 (package 2.1; engine/lens_engine/stage9/learner.py decide)",
+   "why": "the 8.1c NF4 per-split adapters were never saved (Modal runs had no Volume), so they cannot read out holdout pairs",
+   "step_1": "the bf16 8.1c gate (PR #99, E2E job g81c, sealed amendment engine/experiments/8_1c/AMEND_gemma_bf16_gate_e2e.json 83f63951...ddf0) saves all 10 adapters to the Mac. If adoption_gemma_4_31b_base_bf16.json says ADOPT_BF16 (its sealed gate_adoption_rule), route = bf16: the Stage 9 learner is the bf16 10-split ensemble from those adapters",
+   "step_2": "if the verdict is NF4_STAYS or NO_ADOPTION, route = nf4_retrain: the 10 per-split adapters retrained in NF4 on E2E with the sealed 8.1c recipe and seeds (8_1c/PLAN.json + AMEND_gemma_4_31b_base.json, SEED_LORA = 81200 + split), accepted only if every split's tune log-loss replays the sealed NF4 value (results_gemma_4_31b_base.json 5b864276...b332a, selection.<s>.LEARNER_selected.tune.logloss) within 0.011088638914821092 (the sealed noise margin, 2 x pooled seed SD, scaling/amend_gemma_4_31b_base.json measured_seed_spread.two_x). Any split outside: no admissible learner; a new draft",
+   "nf4_sealed_tune_logloss": [
+    0.2243362531676933,
+    0.2064756540311527,
+    0.22838976161580388,
+    0.2307657355974872,
+    0.24863472794010957,
+    0.20828817951757767,
+    0.24317801603556236,
+    0.21295950892117105,
+    0.2130896013504211,
+    0.2223345365545513
+   ],
+   "replay_tolerance": 0.011088638914821092,
+   "either_way": "the stack (describe KEEP, frozen design STACK) is re-fit only as the sealed stack gate procedure specifies (stack_gate/PLAN.json stacker, the same code) on the new readouts; ensemble.json is rebuilt by build_frozen and its sha256 fills model.stack_sha256. The adapter sha256 list is pinned below (learner.adapter_sha256, split order) and checked before any holdout readout (learner.check_adapters)",
+   "implementation_sha256": "a5cf4324e9e78ebce5014a16a7be3e177534beaf69926c3f9477f04cbbc71bc0"
+  },
+  "readout": {
+   "what": "the per-split adapter readout (d_ab, d_ba) of a holdout pair = the sealed 8.1c kernel's Runner.enc / readout / score (Gemma plain template, logit(' B') - logit(' A') at the last prompt token in float32, final logit softcapping), base google/gemma-4-31B @ 5bbc2fb1 + split s's adapter (model.adapters); run on the E2E GPU pass (holdout_text_routes.e2e_gpu)",
+   "implementation": "engine/lens_engine/stage9/readout.py",
+   "implementation_sha256": "58789847c9bf032e3a3e5a80b8d44e94c8376f866754036f41f1d1e8acbcabd7"
+  },
+  "adapters": {
+   "route": "nf4_retrain",
+   "sha256": [
+    "2105ad8f4efbee0fc0a41a0465a82caed4b5d59f1621a467c15051c9c4ff0484",
+    "f6ea2aacf4314464624206efec19edfd89b611561c7d98137a7eac884b141ebf",
+    "dbe4491dcd2e88bf202e98fe0d15eb9dedfe4e73c82190ba88e708d0ee703963",
+    "6c077a6e098c0db0ee1015c2eebbedcb1bea9564e365bb2eadb279e88fdb8350",
+    "96e8f3acad3c63870a8d19c9a582193cc115ed84b8cbfff01e81f2012de841f2",
+    "e3a80ab13a605cce761966970a7498a759521542ce7f3bf68a7990c0355c6062",
+    "7e8d55a38212ead1e1d047913aded520b284decfcfbdf84f90663b93aef94548",
+    "8a25983c2235aa734c454899794599327f981bbbe2ff9e348e98a44877958486",
+    "d232cc25846b4cb93718384f23553c81df87882577c2b7f876d370f53aa65503",
+    "c310aca87931b30a3ac17fec22cd5cc9d61b348e6f03384d6378ccc499a88d3e"
+   ],
+   "fills": "filled 2026-10-21 by engine/scripts/stage9_refit.py from engine/experiments/8_1c/ledger_gemma_4_31b_base_nf4_retrain.sqlite (read only; 8_1c_nf4r:s<k>:retrain adapter_sha256, chain head 9277f7d265bdf7e6fcf1f04b8a5571ad8f5798cf6e17e6d89d4b37e120c3f731, replay max |diff| 0.009698)"
+  }
+ },
+ "baselines": {
+  "rule": "P(B wins) = sigmoid(scale * (s_B - s_A)) on a per-arm score; scale fitted on non-holdout decided pairs before sealing (as 8.1b H.fit_pair_scale)",
+  "length": {
+   "score": "characters of the text",
+   "scale": 0.017762847954056853
+  },
+  "position": {
+   "score": "arm order within the test",
+   "scale": -0.21099745746700813
+  },
+  "always_newer": {
+   "score": "sign of the arm order gap (newer arm)",
+   "scale": -0.46283991681056325
+  },
+  "familiarity": {
+   "score": "mean token log-probability under the open base model",
+   "model": "mean token log-probability of ' ' + text after 'Headline:' (the 8.1b / 8.1c fam_self definition) under google/gemma-4-31B @ 5bbc2fb1, no adapter, weights in the adopted learner's precision (bf16 or nf4); table written by the E2E GPU pass (gpu_pass.py), read by familiarity.TableFamiliarity",
+   "scale": 0.474655050853533,
+   "implementation_sha256": "ecd5935f9c0ee8a64d9a33e3f642c6f548dad2f82baf0bf3dbe23a9b05a986dd",
+   "implementation": "engine/lens_engine/stage9/familiarity.py (MeanLogprobFamiliarity / TableFamiliarity)",
+   "scale_note": "0.4747 was fitted on the NF4 8.1c fam_self scores. If route = bf16, the baseline becomes the bf16 base's familiarity; PROPOSED (Emily to confirm): refit the scale with the same baseline_scales.py on the bf16 gate's own non-holdout familiarity before sealing"
+  },
+  "recognition": {
+   "score": "recognition / membership score of the exact text under the frozen model (models.Recognition)",
+   "model": "Min-K% Prob (k = 20%) of the exact text under google/gemma-4-31B @ 5bbc2fb1 (no adapter); code pinned by sha in models.Recognition before sealing",
+   "scale": 0.15316481430828632,
+   "implementation": "engine/lens_engine/stage9/recognition.py (MinKRecognition / TableRecognition)",
+   "implementation_sha256": "dab4f30f0b38dfc55839a26f7e3e76dbfa8f3b50488ce69c7e9e03c4b924e450",
+   "degenerate_rule": "pre-set 2026-10-21 before any recognition score existed (recognition.py DEGENERATE RULE): a text with no scored token after the BOS shift (under the Gemma 4 tokenizer only the empty string; 1 of the 45,017 non-holdout texts, the cause of the first recog_scale crash) or with a non-finite token log-probability is degenerate; its table row is score 0.0 (finite sentinel, no NaN) with degenerate: true; it is excluded from the scale fit (TableRecognition.score = NaN, baseline_scales.fit drops non-finite gaps) and at Stage 9 scores the median of the table's non-degenerate scores",
+   "table": {
+    "path": "engine/experiments/stage9/gpu_pass/recog_scale/s9gpu-recog_scale-0f8050a01d9a-1792600512/recognition.jsonl (main tree; gitignored run output)",
+    "sha256": "165c59448908ac366af74610e136cbe0fc4fa9f147e7b0c4b06b9f4018c82dfc",
+    "ledger": "engine/experiments/stage9/gpu_pass/ledger.sqlite",
+    "ledger_ref": "stage9_gpu:SCORES:recog_scale:recognition",
+    "ledger_entry_hash": "47f2d011bfc9a815133946f888dd19b06aecf4572df2d4d0832ca9b7f87a7b05",
+    "upload_ref": "stage9_gpu:UPLOAD:recog_scale:lens-e2e-s9gpu-20261021-220512",
+    "n_scores": 45017,
+    "n_degenerate": 1,
+    "scorer_sha256": "dab4f30f0b38dfc55839a26f7e3e76dbfa8f3b50488ce69c7e9e03c4b924e450",
+    "check": "2026-10-21: file sha256 equals the sealed entry's table_sha256; gpu_pass.check_scores against the sealed upload's 45,017 text sha256 list passes; ledger chain verify ok (14 rows)"
+   },
+   "fit_code_sha256": "34777896521af92bdb7ebf5cff80953651a468323ba2be4edea88f828e88fa53",
+   "scale_note": "fitted 2026-10-21 with baseline_scales.py --recognition-table <table> --recognition-sha256 <sha> (the same one-parameter fit as the other four scales) on 9,746 non-holdout decided pairs; the one degenerate row (the empty string, e3b0c442...b855) is excluded by the degenerate rule, and no decided pair contains it, so n_missing = 0"
+  },
+  "dropped": {
+   "web_presence": "no free, licensed, pre-cutoff exact-phrase web index (pre-registration package, section 5, change 5.2)"
+  },
+  "fit": {
+   "file": "research/stage9/baseline_scales.json",
+   "sha256": "9ca437566070acd2417f0b971c028247fecd947aa01e5383d80568358888f1d0",
+   "code": "engine/lens_engine/stage9/baseline_scales.py",
+   "code_sha256": "34777896521af92bdb7ebf5cff80953651a468323ba2be4edea88f828e88fa53",
+   "fitted_on": "9,746 non-holdout decided pairs (familiarity: 9,478 with a fam_self score for both arms; recognition: 9,746, 0 dropped as degenerate)"
+  }
+ },
+ "datasets": [
+  {
+   "id": "upworthy_holdout",
+   "source": "upworthy_sealed_holdout",
+   "licence": "TRAIN-OK",
+   "use_case": "headline",
+   "sealed_set": "retrospective: the 8.0 sealed holdout, read once through stage9.access",
+   "holdout_sha256": "1c62e0c5712b784bc0e4e34618e10cc55697301b2565a881e63e6ab3f63dce77",
+   "slot_seed": 9001,
+   "arm_set_rule": "lens.stage9.arm_set/1 (precollect.ARM_SET_RULE): arms keyed by (test id, text sha256); load_packages arms re-keyed to the text-only pre-collection ids at the read; pre-collection arms and tests the read lacks are excluded by rule and counted in stage9:PREDICTIONS arm_set; an unknown outcome arm refuses",
+   "product_use_case": "M5"
+  }
+ ],
+ "null_tests": {
+  "mock_harness": {
+   "n_runs": 5,
+   "n_pairs": 1000,
+   "min_covering": 4
+  },
+  "label_shuffle": {
+   "n_shuffles": 1000,
+   "ks_p_min": 0.01
+  },
+  "identical_pairs": {
+   "n": 200,
+   "ahead_max": 0.05
+  },
+  "paraphrase_pairs": {
+   "n": 200,
+   "ahead_max": 0.1
+  },
+  "null_pairs": {
+   "min_n": 600
+  },
+  "scrambled_instruction": {
+   "n": 200,
+   "follow_min": 0.8
+  },
+  "baselines_full_system": {},
+  "stability": {
+   "n": 300,
+   "same_pick_min": 0.9
+  },
+  "ledger_tamper": {}
+ },
+ "registry_candidates": [],
+ "describe": {
+  "used": "YES: the stack gate KEPT describe (gain +0.0045 nats, 95% CI +0.0021 to +0.0070, 9,570 decided pairs; STACK PASS_full)",
+  "model": "claude-opus-5-5",
+  "request": "engine/experiments/r0_opus/run_r0_opus.py requests_for, '-d' only (describe_ext builder)",
+  "prompt_source": "the describe system prompt and template are in the sealed R-0 Opus plan engine/experiments/r0_opus/PLAN.json",
+  "prompt_plan_sha256": "ac3a57218e0df4bbdef1603bf75575b484950824ae20822174b31365a18d3ab2",
+  "api": "Batch, via a sealed text-only pre-collection phase (READINESS 3.1), never the synchronous path",
+  "expected_usd": 28,
+  "worst_usd": 54
+ },
+ "b2b": {
+  "status": "separately sealed set, own config and ledger (package section 2.8); never pooled here; results 'pending' until it reaches its pre-registered n"
+ },
+ "publication": {
+  "where": "docs/track-record/ in this repo (package section 2.9): config SHA-256, predictions head, final head, each as a dated commit"
+ },
+ "stack_gate": {
+  "plan_sha256": "ac003b8e2b6a6c04bb49f18c6f7453358f4ce367840f5753965d0cf7fa4ba60b",
+  "verdict": "PASS_full on 10 of 10 splits (mean L 0.318 [0.310, 0.325]; G3 min margins B5 +17.8, B6 +10.7, B7 +11.9 pts; G4 all pass)",
+  "describe_decision": "KEEP (frozen design STACK)",
+  "STACK_no_describe": "also PASS_full (mean L 0.315)",
+  "c98_pooled": "coverage 67.0% [65.6, 68.2], accuracy when confident 98.1% [97.7, 98.5]; non-significant nulls called 28.2%",
+  "results": "engine/experiments/stack_gate/RESULTS.md, results.json",
+  "describe_spend_usd": 64.34
+ },
+ "bridge_set": {
+  "what": "the 600-pair model-change bridge set (package 2.5, O3, B5): needed before the final adapter (or any other model) replaces the gated ensemble; TOST on paired log-loss, margin +-0.02 nats, 90% CI",
+  "rule": "8.6 R-0 tier-1 decided pairs of engine/experiments/r0_claude/selection.jsonl (4,095), pair ids sorted, numpy default_rng(8130).permutation, first 600; every drawn pair's test checked to be a non-holdout test of the guarded loaders.load_pairs()",
+  "path": "research/stage9/bridge_set.json",
+  "sha256": "ee0f60589b98227766a1f21803291da97ac263c6e2e1d8d1a47c3a917953d538",
+  "ids_sha256": "4ebbc283bdaa2a85ec43d61f6a9b64182a88af9fc1222f25af72ce834ccd18a5",
+  "source_sha256": "4b090a8e53aff79c7aab4547f29a68a6e7c44015001c354b8a5e58088193ff1b",
+  "n": 600,
+  "seed": 8130,
+  "drawn_by": "engine/scripts/draw_bridge_set.py (2026-10-21, on the Mac main tree's data, guarded loader only)"
+ },
+ "holdout_text_routes": {
+  "anthropic": "describe (kept) and the two frontier arms, Batch API, text only (pre-collection, phase 2b)",
+  "voyage": "voyage-4 embeddings of holdout headlines (embedding learner) and of the paraphrase null texts, free tier, under the text-only amendment (section voyage, runbook gap G3): engine/lens_engine/stage9/holdout_emb.py (sha256 cce87a01d3faedf8b03219bd1c9f59348ac16a201e257735f971c99010ecc752) stages the texts (one text-only read, sha256 list sealed in stage9_emb:UPLOAD before the call), embeds them with the pinned voyage_embed.py client (4ffd4c61...87f2) and applies the per-split 8.1 learners, refitted exactly as voyage_test a_fit on non-holdout data only and checked against the gate's sealed learner pickles (ensemble.json emb_preds_sha256)",
+  "e2e_gpu": "Emily's ruling 3 (2026-10-21): familiarity and recognition under the Gemma base, and (her ruling of the same day, 'same route') the 10 per-split adapter readouts of holdout pairs, on an E2E Networks instance (the owner's prepaid account) only: text only, no labels; a fresh instance, deleted after the pass; the text sha256 list (and the pair file and adapter pins) sealed before upload and every table hash-checked on return (engine/lens_engine/stage9/gpu_pass.py, sha256 06d90ace158efa97192d0a02f0cbef7b229cc03ff3368bec929490fb33d8cde2). Launcher: engine/lens_engine/stage9/e2e_gpu_pass.py (sha256 47c11254f518cde6b2b2f06822859e1e18e258f3fc24e061fe1cda349ac4da9a), re-pinned 2026-10-21 for runbook gap G5 (the 200 spec 4.7 paraphrase null pairs and their texts join the holdout set; was 53f6d88b...c802) and 2026-10-23 for the pre-read holdout stage check (review of PR #118; was 5ead8f04...a2f9), built and dry-run on CPU; v2 (2026-10-21) adds the non-holdout test_part set (package 2.1a step 3: each split's TEST-part pairs read with its NF4-retrain adapter, in the sealed kernel's order) and the October option-A month override; the non-holdout test_part pass ran 2026-10-21 (Stage 9 GPU ledger head ffbf0d634bf7a43a88e452322fd51eceb2e72fad549380dd63186483b5fb2a06, the refit's readouts); the holdout pass runs after seal-config, once (package section 4 step I)"
+ },
+ "emily_confirmed": {
+  "date": "2026-10-21",
+  "use_case_mapping": {
+   "use_case": "M5",
+   "label": "Content topic, title and search snippet",
+   "note": "Upworthy maps to M5 (ruling 5). The label never enters the product use-case table (contaminated numbers stay out); it names the report row only"
+  },
+  "display_rule_98": {
+   "rule": "say 'about 98% when confident' only if C98 PASSES IN THE ENDPOINT HIERARCHY (its own bar: c98.pass_rule at c98.target_accuracy, and gated, every earlier endpoint passed; Emily's display ruling 2026-10-21) AND, as extra conditions (ruling 5), pooled accuracy when confident >= 0.975 with its 95% CI lower bound >= 0.96; every use of the phrase shows its coverage and its null-pair call rate next to it. When C98 fails or is not gated, the report shows the measured accuracy with its CI lower bound, its coverage and its null-pair call rate, and not the phrase",
+   "encoded_in": "engine/lens_engine/stage9/report.py display_98_allowed / confident_claim (C98 row: pass and gated); app/src/config/forecast-use-cases.ts display98Allowed / formatAccuracy (c98Passed); engine/experiments/stack_gate/report_stack_gate.py (stack gate RESULTS.md: no endpoint hierarchy there, ruling 5's thresholds only)",
+   "ruling_dates": "ruling 5 (2026-10-21); C98 gating added by Emily's display ruling of 2026-10-21 after the runbook dry run printed the phrase with C98 failed"
+  }
+ }
+}

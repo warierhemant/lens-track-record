@@ -1,0 +1,177 @@
+{
+ "id": "amendment:stage9:text-only-precollection:2026-10-20",
+ "status": "RE-APPROVED 2026-10-23 (B4, option A). Emily (CTO) re-approved after the independent review of PR #125 passed (MERGE-READY at 2670d37; tool 20b91892...3b67 and config 53933780...a993 recomputed by the reviewer). Hemant (owner) chose option A in chat on 2026-10-23: limit the pre-collection by actual spend, 0 USD from the card. History: written 2026-10-20; revised 2026-10-21; approved 2026-10-23 (B4, sha256 a4c7fdef6a5a45a8b17d1e12db5e13239569013860440a241df9bf62650b154b, tool 731a757c...cd3a) and superseded the same day before any paid call or outcome read: its build (stage9_pre:BUILD, head 0f784b05c722b3e3c80af831b6281710405df0c4ffc7ace0abea7a759dce7f4a) sealed a worst case of 136.94 USD for 26,801 requests, above the approved 68 USD and the 70.25 USD credit, so submit refused and nothing was sent (see `supersedes`).",
+ "approved_to_run": true,
+ "what": "Stage 9 phase 2b (PREREG_PACKAGE_DRAFT.md section 4): text-only reads of the sealed Upworthy holdout, all before the single outcome read. This amendment allows EXACTLY FIVE text-only reads of the holdout source when the GPU pass is split in two as planned (FOUR if the GPU pass runs as one), each through guard.check_access(True), logged in data/sealed/UNSEAL_LOG.txt and sealed (see data_flow): (0) the superseded first precollect build of 2026-10-23, already made, sealed as stage9_pre:BUILD in the archived ledger (head 0f784b05...7f4a); (1) the precollect re-build under this revision, sealed as stage9_pre:BUILD in a fresh ledger; (2) and (3) one per e2e_gpu_pass `stage --set holdout` command (pass 1 and pass 2), each staged text sha256 list sealed as stage9_gpu:UPLOAD:holdout:<instance> before any file leaves the Mac; (4) holdout_emb stage (the voyage-4 route), sealed as stage9_emb:UPLOAD at the read. No other command may read holdout text under it. The pre-collection read sends the paid calls Stage 9 needs by the Batch API, chunk by chunk under the spend rule (spend_rule) and seals every parsed result in its own ledger engine/experiments/stage9/precollect/ledger.sqlite. Its head is recorded in the Stage 9 predictions manifest (precollect_head) and sealed-run fails closed if any result is missing or any holdout arm text differs (precollect.load_results, check_items; runner._frontier_fields); arms are matched to the outcome read by the arm-set rule (arm_set_rule), never by index.",
+ "tool": "engine/lens_engine/stage9/precollect.py",
+ "tool_sha256": "20b91892de8619fa5e3cdbbf7f8aae922296743b6800e06d801d64b571d03b67",
+ "reads": [
+  "data/sealed/HOLDOUT_SHA256.txt and holdout_ids.txt through lens_engine.data.guard.holdout_ids_for_exclusion (verified against the hash file by the guard)",
+  "the three Upworthy package CSVs through upworthy._read_raw(with_outcomes=False), columns test_id, created_at, headline only; impressions, clicks, significance, first_place and winner are never loaded (text_only_arms refuses if any reaches it)",
+  "upworthy.test_index(allow_holdout=True) eligibility (non-outcome columns only)"
+ ],
+ "arm_rule": "upworthy.headline_arms without its outcome-dependent filters: one arm per distinct headline_key per test, ordered by first package time then text, arm_id = test_id:arm_idx, tests with >= 2 arms. Checked 2026-10-20 on the 11,969 non-holdout tests: the text-only rule reproduces the loaders' 53,181 arm ids and headlines exactly. Any Stage 9 holdout item whose arm id or text differs fails closed",
+ "arm_set_rule": {
+  "id": "lens.stage9.arm_set/1 (precollect.ARM_SET_RULE; package 2.1b; config datasets[0].arm_set_rule)",
+  "why": "the text-only rebuild uses ALL packages; the single outcome read (upworthy.load_packages) drops zero-impression and exact-duplicate packages. A holdout arm whose packages all had zero impressions (or a test left with fewer than 2 arms, or arms re-ordered by a dropped first package) would give different test_id:arm_idx ids on the two sides, and sealed-run would fail closed AFTER the one outcome read",
+  "rule": "an arm is identified on both sides by (test id, sha256 of its headline_key text), never by arm_idx. runner.predict binds the pre-collection's {(test id, text sha256): arm id} index (precollect.load_results arm_index, from the sealed arms.jsonl) to the holdout source BEFORE the read (runner._bind_precollection; a real holdout run without it refuses). At the read every load_packages arm is re-keyed to the pre-collection arm id with the same key (precollect.reconcile in sources.UpworthyHoldoutSource.items): pair ids, arm ids and arm refs are the pre-collection's",
+  "exclusions": "pre-collection arms and tests the outcome read lacks are excluded by rule: no pair, no arm record, no outcome; their counts (n_pre/outcome/excluded tests and arms, n_excluded_arms_in_kept_tests, n_rekeyed_arms) are sealed in stage9:PREDICTIONS arm_set and printed in the report; every endpoint n counts kept arms only",
+  "coverage": "the text-only side is a superset by construction (same eligible tests, same headline_key, a subset of the packages), so every table covers the outcome arms. An outcome arm with no pre-collection arm of the same key refuses (fail closed); so does any arm without its table rows",
+  "kept_values": "kept arms keep their pre-collection frontier picks (a pick of an excluded arm gives the kept arms no vote, as an invalid pick does), probe answers (a probe answer naming an excluded arm leaves that test out of the probe rows; an N answer stays a not-recognised row), describes, readouts and embedding scores (voyage within-test grouping = the full text-only test). order_a/order_b (position, always-newer, b_is_later) stay the load_packages arm_idx. Frontier picks were made among all k text-only arms while Lens ranks the kept arms only, so a vote for an excluded arm is lost (more ties, split credit in F1); this is stated now and not rescored (Emily's ruling 2 of 2026-10-23: the ties stay, F1 is provisional and never gated, the disclosure stays). The pair id, and so the A/B slot coin, is built from the sorted pre-collection ids, never from the outcome-side order",
+  "null_pairs": "the spec 4.7 constructed null pairs are the staged ones (null_pairs.jsonl: nulls.null_specs on the pre-collection text set), loaded before the read by frozen_models.FrozenStack.null_items, their texts taken from the voyage stage's texts.jsonl (sha256 = the sealed stage9_emb:UPLOAD upload_sha256). This is a named non-source access (data_flow.non_source_accesses.sealed_run_null_texts, Emily's ruling 3 of 2026-10-23): a sealed-file access checked against its sha256, not a read of the holdout source, so it is not counted in data_flow.reads",
+  "rehearsal": "2026-10-23, non-holdout tests through the guarded loaders (allow_holdout never passed), engine/lens_engine/stage9/armset_rehearsal.py -> research/stage9/ARMSET_REHEARSAL_2026-10-23.json: text-only 53,181 arms / 11,969 tests; load_packages 53,181 arms / 11,969 tests / 102,386 pairs; under the rule 0 excluded, 0 re-keyed, check_items passes on every item; 0 zero-impression and 0 duplicate packages in all 140,822 non-holdout packages",
+  "tests": "engine/lens_engine/stage9/tests/test_armset_rule.py (pure rule; re-ordered test; synthetic holdout with a zero-impression arm, a one-arm test and a duplicate through the real loaders; sealed predict and join on the frozen table stack without failing closed; staged null pairs; refusals before the read)"
+ },
+ "calls": {
+  "describe": "only if the stack gate KEEPs describe (build --describe keep): one Opus 5.5 describe per unordered holdout pair, the r0_opus requests_for '-d' request (stack gate describe), orientation one coin per pair in sorted key order, numpy default_rng(9102); max_tokens 1024, effort low",
+  "frontier_opus": "claude-opus-5-5: per holdout test a fwd (arm order) and a rev (reversed) best-of-k letter pick with the 8.1 frontier_arm.py PROMPT (sha256 1a50b634...cdbe), plus RECOG on the first 300 holdout tests by sha256(test id); max_tokens 512, effort low, thinking parameter omitted",
+  "frontier_sonnet": "claude-sonnet-5-5: the same requests",
+  "scores": "arm score = 0.5 per order pick (the 8.1 votes_frontier rule); invalid or missing picks give no vote; letter parse = optional 'Option', then one letter A-Q within k, not followed by a letter; RECOG 'N' = not recognised",
+  "api": "Message Batches API, in the sealed chunk order (chunk_order_rule), at most 5,000 requests a chunk, one chunk at a time. Option A (owner, 2026-10-23): before each chunk, actual spend so far + that chunk's expected cost must be <= 68 USD (Hemant's yes of 2026-10-21, precollect.SPEND_CAP_USD), else stage9_pre:STOPPED is sealed and nothing more is sent; credit in hand >= 70 USD (the reserve) at build and at the first chunk, and >= the chunk's expected cost at every chunk. The worst case is computed and sealed as information only (spend_rule)"
+ },
+ "cost": "expected about 35 USD at the first build's counts (17,761 describes x 0.001561 = 27.72; 5,220 Opus requests x 0.001168 = 6.10; 5,220 Sonnet requests x 0.000248 = 1.30; the READINESS 'about 34 USD' model, precollect.EXPECTED_USD), about 6.5 USD per full chunk of 5,000. Worst case 136.94 USD (the first build; information only). The cap is on actual spend: at most 68 USD plus nothing, because a chunk is sent only if actual spend so far + its expected cost <= 68 USD; the prepaid credit (no card on file) is the hard ceiling, so a call past the credit errors instead of billing. Spend is free prepaid API credit; Emily approves before submit",
+ "writes": "engine/experiments/stage9/precollect/: requests.jsonl and index.jsonl (in the chunk order), arms.jsonl (arm id, test id, text sha256), state.json, parsed/*.jsonl and ledger.sqlite (stage9_pre:BUILD with the chunk plan, :INTENT:<chunk>:<attempt> before each create, :SUBMIT:<batch> per chunk with the decision's inputs, :<custom_id> per result, :SPEND:<batch> per collected chunk with its actual spend and the parsed file's sha256, :STOPPED if the spend rule stops the run, :RESULTS). Holdout headline text is in requests.jsonl only (public headlines, no outcome)",
+ "prints": "counts, file hashes and dollars only; never a headline or a test id",
+ "open_for_emily": [
+  "RESOLVED 2026-10-21 (ruling 3): the GPU venue for familiarity and recognition is E2E, not Modal (gpu_pass above). RESOLVED 2026-10-21: the per-split adapter readouts ride the same route (gpu_pass.resolved). The voyage_test learners are refitted deterministically (not saved): see the voyage section (runbook gap G3) for how they are refitted on non-holdout data only and checked against the gate's sealed learner output",
+  "RESOLVED 2026-10-21 (ruling 1): the 8.1c NF4 adapters were never saved; the learner is the bf16 8.1c gate's saved adapters if bf16 is adopted, else an NF4 retrain accepted within the sealed noise margin (package 2.1, learner.py)"
+ ],
+ "tests": "engine/lens_engine/stage9/tests/test_precollect.py (synthetic arms and a fake Batch client: text-only rule, outcome refusal, prompt hash equals the config, both orders, probe, parser, gate, build/submit/collect/seal/load round trip, fail-closed checks, F1 endpoint, runner seals frontier scores); engine/lens_engine/stage9/tests/test_spend_rule.py (option A: expected model, chunk order, stop rule after 2 chunks, actual spend from usage, partial-collection handling, runner n covered) and engine/experiments/stage9_pre/mutate_spend_rule.py (mutation test of the new guards)",
+ "never": "never read an outcome column; never print a headline; never run before approved_to_run is true; never run after the holdout outcome read",
+ "credit_check": "Emily's ruling 4 (B4, 2026-10-21): the credit check runs FIRST in build, before the holdout text is read: build needs --credit-in-hand-usd >= 70 USD (the Stage 9 reserve, precollect.gate_credit) or it refuses and reads nothing; the value is sealed in stage9_pre:BUILD. Option A (2026-10-23): submit re-checks the reserve at the first chunk and, at every chunk, that the credit in hand covers that chunk's expected cost; the cap is the spend rule (actual + next expected <= 68 USD), not the worst case. The prepaid credit (US$70.25 promotional on 2026-10-23, US$0 purchased, no card on file) is the hard ceiling. The Stage 9 predict then makes no paid call and checks the pre-collection head and the sealed build credit (runner._gate_paid), not a new figure. Ruling 6 holds: nothing else may use this credit before this phase runs",
+ "gpu_pass": {
+  "ruling": "Emily's ruling 3, 2026-10-21: the GPU pass on holdout text is allowed on an E2E Networks instance only (the owner's prepaid account)",
+  "what": "familiarity (mean token log-probability, familiarity.py) and recognition (Min-K% 20%, recognition.py) of every holdout arm text under google/gemma-4-31B @ 5bbc2fb1, no adapter, weights in the adopted learner's precision (recognition in bf16, as recognition.py loads it); and (Emily's ruling, 2026-10-21: 'same route') the 10 per-split adapter readouts (d_ab, d_ba) of every within-test holdout pair under the same base with each split's adapter (readout.py, the sealed 8.1c kernel's readout, checked equal to its Runner.score on a tiny model); and (runbook gap G5, 2026-10-21) the readouts of the 200 spec 4.7 paraphrase null pairs (nulls.null_specs: drawn from the distinct holdout texts with the config's null_tests n and bootstrap seed 9000, the pairs the runner constructs at predict time) and the familiarity and recognition of their edited texts; identical null pairs need no readout (gpu_pass refuses two identical texts; their order-averaged readout is 0 exactly, tables.assemble)",
+  "conditions": [
+   "text only, no labels: the upload file holds {text_sha256, text} rows only (gpu_pass.write_upload / check_upload_rows refuse anything else); the texts come from this amendment's text-only arm rebuild (with_outcomes=False)",
+   "a fresh instance, deleted after the pass: the instance is named in stage9_gpu:UPLOAD and refused if it appears in any earlier entry; stage9_gpu:SCORES seals only with the deletion time and --confirm-instance-deleted",
+   "the text sha256 list is sealed in stage9_gpu:UPLOAD before anything is uploaded; each score file must equal the sha256 computed on the instance, hold exactly one finite score per uploaded text sha256 and come from the pinned scorer code (gpu_pass.check_scores, seal_scores)",
+   "readouts: the pair file holds {a_sha256, b_sha256} rows of uploaded texts only (no arm id, test id or label) and is sealed with the 10 adapter sha256 pins of the frozen config in stage9_gpu:UPLOAD before upload; each split's adapter is hashed on the instance and must equal its pin; each readout table must cover exactly the logged pairs, finite (gpu_pass.check_readouts)",
+   "another E2E session or an unconfirmed create recorded in the shared lane state refuses the pass, and so does an unfinished 8.1c bf16 gate (E2E job g81c: its amendment or a g81c session sealed in ledger_gemma_4_31b_base_bf16.sqlite with fewer than the 10 splits sealed, which also covers the gap between two g81c sessions; read-only, an unreadable ledger refuses), checked first and again right before the create; every check seal_scores makes is made for every table, against the UPLOAD entry, before the first is sealed, and sealing happens only after a deletion this pass confirmed (lane.down); readout.py batches exactly as the kernel (stable token-length sort), and the CPU dry run asserts a zero difference from its Runner.score over 66 pairs",
+   "v2 (2026-10-21): the GPU pass also refuses while the NF4 retrain (E2E job g81n, ledger_gemma_4_31b_base_nf4_retrain.sqlite) is unfinished: its amendment or a g81n session sealed with fewer than the 10 `8_1c_nf4r:s<i>:retrain` entries sealed (also between g81n sessions; read-only, an unreadable ledger refuses), checked first and again right before the create"
+  ],
+  "ledger": "engine/experiments/stage9/gpu_pass/ledger.sqlite; its head goes into the Stage 9 manifest beside the pre-collection head",
+  "tool": "engine/lens_engine/stage9/gpu_pass.py",
+  "tool_sha256": "06d90ace158efa97192d0a02f0cbef7b229cc03ff3368bec929490fb33d8cde2",
+  "readout_sha256": "58789847c9bf032e3a3e5a80b8d44e94c8376f866754036f41f1d1e8acbcabd7",
+  "launcher": "engine/lens_engine/stage9/e2e_gpu_pass.py (instance job: gpu_job.py + gpu_job.sh)",
+  "launcher_sha256": "47c11254f518cde6b2b2f06822859e1e18e258f3fc24e061fe1cda349ac4da9a",
+  "gpu_job_sha256": "3a0e6c306b8a01ef6101fd2389f42e6c1a6c03840d252f937813bb4d5370f4e8",
+  "gpu_job_sh_sha256": "f257d13def7b0984b062eaf3d93f8295ad6fadb66d532f4573604a00856c9f27",
+  "familiarity_sha256": "ecd5935f9c0ee8a64d9a33e3f642c6f548dad2f82baf0bf3dbe23a9b05a986dd",
+  "recognition_sha256": "dab4f30f0b38dfc55839a26f7e3e76dbfa8f3b50488ce69c7e9e03c4b924e450",
+  "run": "TODO: not run. Launcher v2 (2026-10-21, branch cloud/s9-gpupass-v2): sets recog_scale, holdout and test_part; tests with fake TIR clients (test_e2e_gpu_pass.py, test_e2e_gpu_pass_test_part.py), mutation test experiments/stage9_gpu/mutate_gpupass_v2.py (35/35 killed) and the CPU dry run (experiments/stage9_gpu/dryrun_cpu.py: 12 holdout tables + 3 test_part tables sealed, test_part readouts equal to the sealed kernel's TEST scoring with max abs diff 0.0). The holdout set can be staged only after this amendment is approved (approved_to_run true) with the hashes above; spend is the owner's prepaid E2E account under the caps above (pass cap INR 2,500; October: option A; from November the INR 5,000 month cap)",
+  "resolved": "Emily's ruling, 2026-10-21: the 10 per-split adapter readouts of holdout pairs ride this route (same conditions, plus the adapter sha256 pins of the frozen config checked on the instance)",
+  "test_part": {
+   "what": "package 2.1a step 3: non-holdout TEST-part readouts for the stack re-fit. For each split k, split k's TEST-part pairs of the sealed 8.1b split files (s<k>/test_jobs.jsonl, the files the sealed 8.1c kernel scores), both orders, scored with split k's NF4-retrain adapter (g81n) by readout.py in precision nf4, in the kernel's file order and orientation, duplicates kept, so the kernel's batches are rebuilt and its TEST scoring reproduced exactly (CPU dry run: max abs diff 0.0 against the kernel's x_child TEST path on 3 synthetic splits)",
+   "set": "e2e_gpu_pass.py --set test_part (kinds: readout only)",
+   "pair_files": "one ordered pair file per split, pairs_s<k>.jsonl: {a_sha256, b_sha256} rows only (gpu_pass.write_pairs_ordered), each sealed in stage9_gpu:UPLOAD (pairs_sha256_by_split, n_pairs_by_split) before upload; each readout table must hold the same (a, b) sequence row for row (gpu_pass.check_readouts_ordered), finite, hash-checked; all or nothing as for the other sets",
+   "test_jobs_sha256": {
+    "0": "554978266df564eaaaa1d0197ac4d7a46633e78ec9a9832a4c2c4bebdff2c872",
+    "1": "8d0ff21d1f08583fd5e78da9111e4dab864e08b00c8a929563a2ccff345ed750",
+    "2": "f73752675d0e5793929d6cfdf4498263f0c0d507e909e46e49529d5a240cdb59",
+    "3": "6c12367f9968f20234f7479fb93aca12e8e63e0db0f8d6429941aa50a85021cf",
+    "4": "b0fc0986b9ba3c9606c3e7d234a63e10b449e92f2b27790e306210a72cf509b5",
+    "5": "a02515306852d45b98cd306e49910728c2cfe91bcb321a8735274f5ddf6d0d58",
+    "6": "fb67024e249433c6e2b6bb5de9861e5364200ef2291d63afaa37bc5434124657",
+    "7": "5f737d424b68e44c6e9404805625c8f4cfbb035ea708b184379c7bd74f3d1684",
+    "8": "8b1e132291c9280312b85675e45c587f651c6e1dda5504c214106ee99837a2f7",
+    "9": "1fc2b4d7a0a30fa623524351fbe5303ffd6c57685dff6ea37bfabd53f9925872"
+   },
+   "n_pairs": {
+    "0": 20466,
+    "1": 20296,
+    "2": 20399,
+    "3": 20676,
+    "4": 20734,
+    "5": 20412,
+    "6": 20315,
+    "7": 20359,
+    "8": 20259,
+    "9": 20846
+   },
+   "n_pairs_total": 204762,
+   "g81n_ledger": "engine/experiments/8_1c/ledger_gemma_4_31b_base_nf4_retrain.sqlite",
+   "adapter_pins": "the 10 sealed `8_1c_nf4r:s<k>:retrain` entries' adapter_sha256 in g81n's ledger (adapters verified against the instance manifest at import), read only, the chain recomputed; staging refuses unless all 10 are sealed with seed 81200 + k, every tune log-loss is joined and learner.replay_check passes; the adapter files must hash to the pins; once the frozen config pins model.adapters (route nf4_retrain), they must agree",
+   "mac_side": "e2e_gpu_pass.test_part_components maps row i of readouts_s<k>.jsonl back to row i's key of s<k>/test_jobs.jsonl ({key, d_ab, d_ba}, the kernel's test.jsonl rows)",
+   "estimate": "H200, 204,762 pairs x 2 orders: central 1.19 h (INR 706 on-demand, INR 124 spot), NF4 no faster than bf16 1.82 h (INR 1,079 / 189), slow 3.68 h (INR 2,182 / 382), incl. GST at the 2026-10-19 rates; measured basis: g81c bf16 TEST 35.7 pairs/s and tune pick 19.4 pairs/s (J2b 20.2), J3's NF4 scoring ratio 0.606 (unmeasured for Gemma NF4)"
+  },
+  "month_override": {
+   "ruling": "owner, 2026-10-21, option A: the NF4 retrain (g81n, its own run cap INR 4,000) plus the GPU pass in October, INR 8,500 incl. GST combined",
+   "month": "2026-10",
+   "option_cap_inr": 8500.0,
+   "rule": "in 2026-10 a GPU pass is bound by INR 8,500 - ALL g81n spend - the GPU pass's own October spend, counted from the shared e2e_spend.jsonl by instance-name prefix (GPU-pass instances lens-e2e-s9gpu-*, g81n lens-e2e-g81n-*; a record carrying an s9gpu- / g81n_ run counts too, fail closed); the session deadline and worst case are bounded by what is left. Scoped to GPU-pass instances only: every other job keeps the INR 5,000 month cap over ALL spend. From 2026-11 the INR 5,000 month cap over all spend binds the GPU pass again. The per-pass cap INR 2,500 and the lane's session limits are unchanged"
+  }
+ },
+ "data_flow": {
+  "rule": "holdout headline TEXT (public, no outcome, no label) leaves the Mac by exactly three routes, each run under this amendment, each read sealed before anything is sent (package 2.1 data flow)",
+  "reads": {
+   "count_split_gpu_pass": 5,
+   "count_single_gpu_pass": 4,
+   "precollect_build": "2 reads: the superseded first build (2026-10-23, stage9_pre:BUILD head 0f784b05...7f4a, ledger archived) and the re-build under this revision; each sealed in stage9_pre:BUILD (arms sha256, requests sha256, chunk plan, credit in hand)",
+   "gpu_pass_stage": "1 read per `e2e_gpu_pass stage --set holdout` command (2 with the planned split); the staged text sha256 list, pair file and adapter pins sealed in stage9_gpu:UPLOAD:holdout:<instance> before upload",
+   "voyage_stage": "1 read; stage9_emb:UPLOAD (text sha256 list, arms and null-pair files) sealed at the read, before the Voyage call"
+  },
+  "non_source_accesses": {
+   "ruling": "Emily, 2026-10-23 (PR #119, ruling 3): a sealed-file access checked against its sha256 is not a fresh read of the holdout source and is not counted in reads",
+   "sealed_run_null_texts": "sealed-run (step J), before the single outcome read: frozen_models.FrozenStack.null_items reads engine/experiments/stage9/emb/stage/texts.jsonl, the file the voyage stage (read 4 above) already wrote, only after its sha256 equals the sealed stage9_emb:UPLOAD upload_sha256; it takes the texts of the staged spec 4.7 null pairs (null_pairs.jsonl) from it. No guard call, no package CSV, no outcome column; nothing leaves the Mac. Refused before the read if the file is missing or differs"
+  },
+  "routes": {
+   "anthropic": "describe (kept) and both frontier arms, Message Batches API (calls, cost and credit checks above)",
+   "e2e_gpu": "familiarity, recognition and the 10 per-split adapter readouts on a fresh E2E instance (gpu_pass below), now including the 200 spec 4.7 paraphrase null pairs (runbook gap G5)",
+   "voyage": "voyage-4 embeddings of the holdout arm texts and the paraphrase null texts, free tier (voyage below)"
+  },
+  "never": "no route receives an outcome, an arm id, a test id or a label; the single outcome read is sealed-run (step J) only"
+ },
+ "voyage": {
+  "what": "runbook gap G3: the stack's emb_logit needs split s's voyage-4 learner score of every holdout arm (and of the constructed null-pair arms, gap G5). holdout_emb.py stages the holdout texts (one text-only read, the arm rebuild above), embeds them with voyage-4, and applies the per-split 8.1 learners",
+  "tool": "engine/lens_engine/stage9/holdout_emb.py",
+  "tool_sha256": "cce87a01d3faedf8b03219bd1c9f59348ac16a201e257735f971c99010ecc752",
+  "client": "engine/experiments/voyage_test/voyage_embed.py post() (package section 3 pin, voyage_test amendment 2)",
+  "client_sha256": "4ffd4c61354821f5d706872551caee472bf0af10ada79126f9d07a95238b87f2",
+  "model": "voyage-4, output_dimension 1024, input_type None, truncation true, float; an empty text gets the zero vector (exactly as the non-holdout embeddings)",
+  "learners": "the per-split learners were never saved (voyage_test a_fit 'refitted deterministically (not saved)', open_for_emily above), so each split's learner is refitted EXACTLY as voyage_test a_fit (run_8_1.fit_split, unchanged code) on that split's sealed NON-holdout train and tune parts and the 53,181 non-holdout voyage-4 vectors only; holdout and null-pair arms are appended to the TEST part, which fit_split scores but never fits on (no outcome exists for them). Each refit must reproduce the stack gate's staged learner pickle whose sha256 the frozen ensemble.json records (emb_preds_sha256): same pick, same pair scale, every non-holdout TEST-part score within 1e-9 (Emily's ruling 3, 2026-10-22). All 10 splits are refitted and checked first WITHOUT any holdout or null-pair row, and any mismatch stops the run before any holdout embedding is scored; only then is each split refitted with the appended rows, re-checked the same way, and scored. Otherwise nothing is written or sealed. Nothing is ever fitted on holdout data",
+  "groups": "a holdout arm is scored inside its own holdout test; each constructed null pair is its own two-arm test (test id = its pred_id), as the runner scores it. Emily's ruling 1 (2026-10-22): this grouping stays, because a real two-arm Upworthy test is z-scored the same way on splits 6 and 7 (C-d_stack, z-scored within the test, where a two-arm group puts any embedding difference at +-1 SD); if the paraphrase null row fails because of it, that is an honest finding and is reported",
+  "conditions": [
+   "text only: texts.jsonl holds {text_sha256, text} rows only (gpu_pass.write_upload); arms.jsonl and null_pairs.jsonl hold ids and sha256 only and never leave the Mac",
+   "the text sha256 list is sealed in stage9_emb:UPLOAD (engine/experiments/stage9/emb/ledger.sqlite) at the read, before the call; embed re-checks texts.jsonl against it",
+   "free tier only: embed refuses if voyage_embed's budget stop (half of the 200M free tokens) would be crossed; about 8,100 short texts",
+   "each step runs once: stage on an empty ledger, embed and score refuse once their entry is sealed (stage9_emb:EMBED, stage9_emb:SCORES)"
+  ],
+  "ledger": "engine/experiments/stage9/emb/ledger.sqlite (stage9_emb:UPLOAD, :EMBED, :SCORES); its head is recorded in the table manifest (tables.assemble) and the Stage 9 predictions manifest",
+  "run": "TODO: not run (needs this amendment approved)"
+ },
+ "spend_rule": {
+  "id": "lens.stage9.spend_rule/1 (precollect.SPEND_RULE; package 2.7; config credit.spend_cap_usd)",
+  "ruling": "Hemant (owner) in chat on 2026-10-23, option A: limit by actual spend",
+  "rule": "submit in chunks of at most 5,000 requests, in the sealed chunk order, one chunk at a time. Before each chunk: actual spend so far + that chunk's EXPECTED cost must be <= 68 USD; if not, nothing is submitted and stage9_pre:STOPPED is sealed (chunk, requests submitted, actual, next expected, cap). After each chunk: collect it, seal every result and its actual spend (stage9_pre:SPEND:<batch>), then decide the next chunk; submit refuses while a submitted chunk is uncollected",
+  "actual_spend": "measured from the collected batch results: per succeeded result input tokens x the pinned input price + output tokens x the pinned output price (a non-zero cache token count fails closed) (precollect.PRICES: Opus 5.5 2/10, Sonnet 5.5 1/5 USD per M tokens, Batch = 50% of the standard 4/20 and 2/10, checked 2026-10-23 against the claude-api pricing reference); errored or expired results count 0 (not billed); a result naming an unpriced model or without token counts fails closed; each parsed file must equal the sha256 sealed in its SPEND entry",
+  "expected_model": "precollect.EXPECTED_USD, the per-request model behind the 34 USD figure (READINESS_2026-10-20 section 2): describe 0.001561 USD (describe_ext/COST.json, 4,861 calibrated Opus describes); Opus pick or probe 179 input + 81 output tokens = 0.001168 USD; Sonnet pick or probe 5.41 USD / 21,774 = 0.000248 USD (the 8.1 actual). Each chunk's expected cost is sealed in the build's chunk_plan and re-computed at submit",
+  "credit": "credit in hand >= the 70 USD reserve at build (before the holdout read) and at the first chunk; >= the chunk's expected cost at every chunk; the prepaid credit is the hard ceiling (no card on file)",
+  "worst_case": "computed per request (precollect.worst_usd) and per chunk, sealed in stage9_pre:BUILD (worst_usd, chunk_plan) as information only; it no longer refuses submit",
+  "recording": "review of PR #125: the sealed ledger is the record, state.json only a copy. Before each create an INTENT entry is sealed (stage9_pre:INTENT:<chunk>:<attempt>), the create is made with max_retries=0 and the SUBMIT entry is sealed right after it. Before every submit and every run step the account's batch list is read (client.messages.batches.list) and any batch created since the build (15 minute margin) that is not a sealed SUBMIT entry refuses: a billed batch is never left unrecorded and never followed by a second one. Actual spend is the sum of the sealed SPEND entries, each re-computed from its parsed file",
+  "collect": "a batch's results must be exactly its chunk's sealed custom ids (index rows first..first+n): once each, none missing, no extra, else nothing is sealed and the chunk stays uncollected, so the next submit stays blocked. The parsed file is written atomically before the COMMIT of the results and the SPEND entry; a chunk whose SPEND entry exists and matches its file counts as collected (crash recovery). A non-zero cache token count fails closed (no request sets cache_control)"
+ },
+ "chunk_order_rule": {
+  "id": "lens.stage9.chunk_order/1 (precollect.CHUNK_ORDER_RULE, chunk_plan)",
+  "rule": "requests are grouped by holdout test: the test's describes (custom id order), then per frontier arm (Opus, then Sonnet) its fwd pick, rev pick and recognition probe if the test is a probe test; tests are ordered by sha256('lens.stage9.chunk_order/1|' + test id); whole tests are packed greedily into chunks of at most 5,000 requests. requests.jsonl and index.jsonl are written in this order and the plan (first, n, n_tests, n_by_kind, expected_usd, worst_usd per chunk) is sealed in stage9_pre:BUILD",
+  "why": "fair interleave fixed before the re-build: every chunk carries the describes of its tests' pairs and both frontier arms' picks of the same tests, in a test order no one chose, so a stop leaves a random subset of whole tests covered by every feature, never one feature without another and never half a test"
+ },
+ "partial_rule": {
+  "id": "lens.stage9.partial/1 (precollect.PARTIAL_RULE, load_results, runner._frontier_fields)",
+  "seal": "seal-results seals a STOPPED run's collected chunks (complete false, stopped true); the submitted chunks must be the first chunks of the sealed plan and match the STOPPED count, else load fails closed",
+  "describes": "a describe never sent is a missing describe: toward_y None in describe.jsonl, which the stack reads as its missing-describe indicator (m = 1), exactly as a failed describe call",
+  "frontier": "each frontier arm scores the tests whose fwd and rev picks were sent and reports n covered (load_results coverage, sealed as precollect_coverage in stage9:PREDICTIONS; F1 n_tests); arms of tests never sent carry no frontier score and their probe rows are absent; F1 runs on the covered tests only",
+  "fail_closed": "a request that was sent and has no sealed result, a result for a request never sent, a missing score inside a covered test, or a missing score in a complete run still refuses"
+ },
+ "supersedes": {
+  "what": "the first Stage 9 seal of 2026-10-23, superseded before any paid call or outcome read because the worst-case cap blocked submission",
+  "config": "b755abe15e295c7179f03a4ecdb3f19e952107ab56f820dae12e36163594f38f (stage9-holdout-v1)",
+  "package": "cd5c6a8cfe7d92267a28e7d00e809466a3a514a25beb842d684e84ebca20cf78 (PREREG_PACKAGE_v1.md, unchanged, never edited)",
+  "stage9_ledger_head": "7f943cebe4dde556748d49c70672efcdef558a936d4757062f5793f78565a45d (stage9:FROZEN)",
+  "precollect_build_head": "0f784b05c722b3e3c80af831b6281710405df0c4ffc7ace0abea7a759dce7f4a (stage9_pre:BUILD: 26,801 requests, worst_usd 136.94, credit_in_hand_usd 70.25)",
+  "holdout_text_reads": "that build read the holdout text once (read 0 in `what`); the re-build reads it once more (read 1), so the count goes from 4 to 5",
+  "ledgers": "archived, not deleted: both ledgers and the first build's files move to engine/experiments/stage9/_archive/2026-10-23_first_seal/ before the re-seal",
+  "seal_config_guard": "publication.require_published refuses a package whose sha256 is listed in supersedes.package, so the v2 config cannot be sealed against v1"
+ }
+}

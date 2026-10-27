@@ -1,0 +1,7 @@
+# The two stack gate ledgers are about 1 GB each, too large for git.
+# They are attached to the release as .gz files. See README step 2.
+engine/experiments/stack_gate/ledger.sqlite
+engine/experiments/stack_gate/refit_nf4r/ledger.sqlite
+*.gz
+__pycache__/
+.venv/

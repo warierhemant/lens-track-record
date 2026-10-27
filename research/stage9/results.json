@@ -1,0 +1,648 @@
+{
+ "schema": "lens.stage9.results/2",
+ "config_id": "stage9-holdout-v2",
+ "config_sha256": "53933780bf8f695821c3fee2613f04299f2a2cf86550295c5d326e22e9e7a993",
+ "ledger_head": "593b7996e52d4a3146e170948211cd70c258d2e84be74171bf23b7411702282f",
+ "synthetic": false,
+ "internal_benchmark": false,
+ "model": {
+  "name": "lens-ens10-STACK",
+  "version": "94ed011ee886"
+ },
+ "arm_score_method": "stack.score_arms",
+ "arm_set": {
+  "upworthy_holdout": {
+   "n_excluded_arms": 0,
+   "n_excluded_arms_in_kept_tests": 0,
+   "n_excluded_tests": 0,
+   "n_outcome_arms": 9324,
+   "n_outcome_tests": 2110,
+   "n_pre_arms": 9324,
+   "n_pre_tests": 2110,
+   "n_rekeyed_arms": 0,
+   "rule": "lens.stage9.arm_set/1"
+  }
+ },
+ "null_tests": {
+  "mock_harness": {
+   "pass": true,
+   "runs": [
+    {
+     "seed": 9000,
+     "n": 1000,
+     "kappa": -0.002664450951332828,
+     "ci95": [
+      -0.06432677627693169,
+      0.06211838228970336
+     ],
+     "covers_0": true
+    },
+    {
+     "seed": 9001,
+     "n": 1000,
+     "kappa": 0.006553541957089628,
+     "ci95": [
+      -0.05592355166859965,
+      0.06728824678723717
+     ],
+     "covers_0": true
+    },
+    {
+     "seed": 9002,
+     "n": 1000,
+     "kappa": 0.027404085700049905,
+     "ci95": [
+      -0.03422245088952662,
+      0.09136403814377164
+     ],
+     "covers_0": true
+    },
+    {
+     "seed": 9003,
+     "n": 1000,
+     "kappa": 0.024141966303842632,
+     "ci95": [
+      -0.0403045940841214,
+      0.08415101986086915
+     ],
+     "covers_0": true
+    },
+    {
+     "seed": 9004,
+     "n": 1000,
+     "kappa": -0.04400000000000004,
+     "ci95": [
+      -0.10678817874479629,
+      0.01605843703399093
+     ],
+     "covers_0": true
+    }
+   ],
+   "n_covering": 5,
+   "bar": 4
+  },
+  "label_shuffle": {
+   "pass": true,
+   "n": 1664,
+   "n_shuffles": 1000,
+   "ks_p": 0.37523830594738306,
+   "bar": 0.01,
+   "share_p_below_05": 0.058
+  },
+  "identical_pairs": {
+   "ahead": 0,
+   "bar": 0.05,
+   "n": 200,
+   "pass": true,
+   "rate": 0.0,
+   "threshold": 0.4905,
+   "wilson95": [
+    0.0,
+    0.018845326668962936
+   ]
+  },
+  "paraphrase_pairs": {
+   "ahead": 0,
+   "bar": 0.1,
+   "n": 200,
+   "pass": true,
+   "rate": 0.0,
+   "threshold": 0.4905,
+   "wilson95": [
+    0.0,
+    0.018845326668962936
+   ]
+  },
+  "null_pairs": {
+   "pass": true,
+   "n": 5191,
+   "called": 210,
+   "rate": 0.04045463301868619,
+   "wilson95": [
+    0.035425984044884076,
+    0.04616292723106656
+   ],
+   "threshold": 0.4905,
+   "min_n": 600
+  },
+  "scrambled_instruction": {
+   "bar": 0.8,
+   "follow": 200,
+   "n": 200,
+   "pass": true,
+   "probe": "word-count:str.split:v1",
+   "rate": 1.0
+  },
+  "baselines_full_system": {
+   "pass": true,
+   "baselines": {
+    "position": {
+     "pass": true,
+     "hit_rate_diff": 0.35396634615384615,
+     "ci95": [
+      0.3191715059245299,
+      0.3891931872701104
+     ]
+    },
+    "length": {
+     "pass": true,
+     "hit_rate_diff": 0.38701923076923084,
+     "ci95": [
+      0.3554918076884335,
+      0.4187894469614123
+     ]
+    },
+    "always_newer": {
+     "pass": true,
+     "hit_rate_diff": 0.35396634615384615,
+     "ci95": [
+      0.3191715059245299,
+      0.3891931872701104
+     ]
+    },
+    "familiarity": {
+     "pass": true,
+     "hit_rate_diff": 0.375,
+     "ci95": [
+      0.33988906527501783,
+      0.4074330876106591
+     ]
+    },
+    "recognition": {
+     "pass": true,
+     "hit_rate_diff": 0.3888221153846154,
+     "ci95": [
+      0.35403883385404944,
+      0.42380429576073136
+     ]
+    }
+   }
+  },
+  "stability": {
+   "bar": 0.9,
+   "n": 300,
+   "pass": true,
+   "rate": 1.0,
+   "reseeded": false,
+   "same_pick": 300
+  },
+  "ledger_tamper": {
+   "pass": true,
+   "cases": [
+    {
+     "kind": "outcome",
+     "attack": "edit",
+     "detected": true
+    },
+    {
+     "kind": "outcome",
+     "attack": "delete",
+     "detected": true
+    },
+    {
+     "kind": "outcome",
+     "attack": "backdate",
+     "detected": true
+    },
+    {
+     "kind": "prediction",
+     "attack": "edit",
+     "detected": true
+    },
+    {
+     "kind": "prediction",
+     "attack": "delete",
+     "detected": true
+    },
+    {
+     "kind": "prediction",
+     "attack": "backdate",
+     "detected": true
+    },
+    {
+     "kind": "root",
+     "attack": "edit",
+     "detected": true
+    },
+    {
+     "kind": "root",
+     "attack": "delete",
+     "detected": true
+    },
+    {
+     "kind": "root",
+     "attack": "backdate",
+     "detected": true
+    }
+   ],
+   "n_detected": 9,
+   "n": 9
+  }
+ },
+ "null_tests_failed": [],
+ "accuracy_shown": true,
+ "analysis": {
+  "P": {
+   "name": "best-of-k normalised lift L",
+   "point": 0.33047756618683305,
+   "ci95": [
+    0.30244126950704264,
+    0.3591162157373411
+   ],
+   "n_tests": 2110,
+   "chance": 0.25213723217277717,
+   "accuracy": 0.49928909952606637,
+   "bar": 0.171,
+   "pass_rule": "ci_lower",
+   "pass": true,
+   "parity_with_lola": true,
+   "gated": true
+  },
+  "S1": {
+   "name": "learner beats baselines",
+   "baselines": {
+    "position": {
+     "hit_rate_diff": 0.352764423076923,
+     "ci95": [
+      0.31866733910484546,
+      0.3883444801709811
+     ],
+     "pass": true
+    },
+    "length": {
+     "hit_rate_diff": 0.3858173076923077,
+     "ci95": [
+      0.3546173113831591,
+      0.41690501697491006
+     ],
+     "pass": true
+    },
+    "always_newer": {
+     "hit_rate_diff": 0.352764423076923,
+     "ci95": [
+      0.31866733910484546,
+      0.3883444801709811
+     ],
+     "pass": true
+    },
+    "familiarity": {
+     "hit_rate_diff": 0.37379807692307687,
+     "ci95": [
+      0.3385165606704508,
+      0.40643967555734534
+     ],
+     "pass": true
+    },
+    "recognition": {
+     "hit_rate_diff": 0.3876201923076923,
+     "ci95": [
+      0.3538952546589622,
+      0.4232960043073686
+     ],
+     "pass": true
+    }
+   },
+   "pass": true,
+   "gated": true
+  },
+  "S2": {
+   "name": "panel gain log-loss(text) - log-loss(text+describe)",
+   "point": 0.0011237743567880931,
+   "ci95": [
+    -0.0023866412753803614,
+    0.004550625794390347
+   ],
+   "verdict": "DROP",
+   "pass": false,
+   "label": "provisional until 8.7 has 100+ post-cutoff decided pairs",
+   "gated": true
+  },
+  "S3": {
+   "name": "calibration",
+   "slope": 1.1284385223971927,
+   "slope_ci95": [
+    1.013051379719818,
+    1.2748764642652957
+   ],
+   "intercept": -0.022293001588752786,
+   "intercept_ci95": [
+    -0.19436388142641645,
+    0.16889953643997743
+   ],
+   "spiegelhalter_p": 0.03611816487105152,
+   "slope_inside": false,
+   "intercept_contains_0": true,
+   "spiegelhalter_ok": false,
+   "debiased_ece": 0.009287195990426584,
+   "debiased_ece_ci95": [
+    0.0,
+    0.04720526742155577
+   ],
+   "n": 1664,
+   "pass": false,
+   "gated": false,
+   "note": "not gated (hierarchy stopped at S2)"
+  },
+  "S4": {
+   "name": "can't-tell rule",
+   "threshold": 0.4905,
+   "selective_accuracy": 0.997979797979798,
+   "selective_accuracy_ci95": [
+    0.9935341336486184,
+    1.0
+   ],
+   "coverage": 0.29747596153846156,
+   "coverage_ci95": [
+    0.26838191734039585,
+    0.3280798159028384
+   ],
+   "n_decided": 1664,
+   "n_called": 495,
+   "null_call_rate": 0.04045463301868619,
+   "null_call_ci95": [
+    0.035425984044884076,
+    0.04616292723106656
+   ],
+   "n_null": 5191,
+   "identical_ahead_rate": 0.0,
+   "identical_ahead_ci95": [
+    0.0,
+    0.16112516018512965
+   ],
+   "n_identical": 20,
+   "share_of_calls_on_nulls_at_base_rate": 0.29196808572338634,
+   "pass": true,
+   "gated": false,
+   "note": "not gated (hierarchy stopped at S2)"
+  },
+  "C98": {
+   "name": "accuracy when confident (98% rule, 4b)",
+   "full": {
+    "threshold": 0.41,
+    "selective_accuracy": 0.9866666666666667,
+    "selective_accuracy_ci95": [
+     0.9786535303776683,
+     0.9933945684297449
+    ],
+    "coverage": 0.7211538461538461,
+    "coverage_ci95": [
+     0.6943057225719743,
+     0.7456848830825004
+    ],
+    "n_decided": 1664,
+    "n_called": 1200,
+    "null_call_rate": 0.3168946253130418,
+    "null_call_ci95": [
+     0.304377184782287,
+     0.3296828697839637
+    ],
+    "n_null": 5191,
+    "identical_ahead_rate": 0.0,
+    "identical_ahead_ci95": [
+     0.0,
+     0.16112516018512965
+    ],
+    "n_identical": 20,
+    "share_of_calls_on_nulls_at_base_rate": 0.5712674989640538
+   },
+   "base": {
+    "threshold": 0.41,
+    "selective_accuracy": 0.985962014863749,
+    "selective_accuracy_ci95": [
+     0.9783269280104809,
+     0.9925866434803832
+    ],
+    "coverage": 0.7277644230769231,
+    "coverage_ci95": [
+     0.7007751240859462,
+     0.7526572106561434
+    ],
+    "n_decided": 1664,
+    "n_called": 1211,
+    "null_call_rate": 0.3078404931612406,
+    "null_call_ci95": [
+     0.2954293531538415,
+     0.3205358277297304
+    ],
+    "n_null": 5191,
+    "identical_ahead_rate": 0.0,
+    "identical_ahead_ci95": [
+     0.0,
+     0.16112516018512965
+    ],
+    "n_identical": 20,
+    "share_of_calls_on_nulls_at_base_rate": 0.5619086756477585
+   },
+   "target_accuracy": 0.98,
+   "pass_rule": "ci_lower",
+   "gated_on": "full",
+   "source": "R-0 v2 plan dbadebd0 rule 4b (RESUME.md 2026-10-15)",
+   "pass": false,
+   "gated": false,
+   "note": "not gated (hierarchy stopped at S2)"
+  },
+  "S5": {
+   "name": "decided-pair accuracy",
+   "accuracy": 0.9278846153846154,
+   "accuracy_ci95": [
+    0.9131724363772455,
+    0.9415037676379727
+   ],
+   "always_control": 0.5739182692307693,
+   "always_control_rule": "earlier arm of the test",
+   "kappa": 0.855701899549213,
+   "kappa_ci95": [
+    0.826253017289421,
+    0.8829959586551365
+   ],
+   "target": 0.8611,
+   "pass": true,
+   "gated": false,
+   "note": "not gated (hierarchy stopped at S2)"
+  },
+  "S6": {
+   "name": "letter-style edge test",
+   "plan_id": "customer-v1",
+   "n_called": 495,
+   "looks": [
+    {
+     "n": 40,
+     "reached": true,
+     "strongest_naive": "always_control",
+     "b": 20,
+     "c": 0,
+     "p": 9.5367431640625e-07,
+     "alpha": 0.01,
+     "edge_shown": true
+    }
+   ],
+   "claimed_at": 40,
+   "pass": true,
+   "gated": false,
+   "note": "not gated (hierarchy stopped at S2)"
+  },
+  "extra": {
+   "kappa_matched_coverage": {
+    "coverage": 0.49,
+    "kappa": 0.9901923076923077,
+    "ci95": [
+     0.9776460191791287,
+     0.9975971245869215
+    ],
+    "n_called": 816,
+    "external_kappa": 0.31,
+    "above_external": true,
+    "rule": "Lens kappa is said to exceed the external figure only if its 95% CI lower bound is above it; the external figure is another vendor's data set, never placed in the same row as an Upworthy number"
+   },
+   "reliability": {
+    "bins": [
+     {
+      "n": 167,
+      "mean_confidence": 0.6232459091045595,
+      "accuracy": 0.6347305389221557
+     },
+     {
+      "n": 167,
+      "mean_confidence": 0.7932072300856489,
+      "accuracy": 0.8502994011976048
+     },
+     {
+      "n": 167,
+      "mean_confidence": 0.8916976726098873,
+      "accuracy": 0.8862275449101796
+     },
+     {
+      "n": 167,
+      "mean_confidence": 0.9397195700496124,
+      "accuracy": 0.9461077844311377
+     },
+     {
+      "n": 166,
+      "mean_confidence": 0.9654696642034784,
+      "accuracy": 0.9939759036144579
+     },
+     {
+      "n": 166,
+      "mean_confidence": 0.9794312293615471,
+      "accuracy": 0.9819277108433735
+     },
+     {
+      "n": 166,
+      "mean_confidence": 0.987209236006245,
+      "accuracy": 0.9939759036144579
+     },
+     {
+      "n": 166,
+      "mean_confidence": 0.992841221594997,
+      "accuracy": 0.9939759036144579
+     },
+     {
+      "n": 166,
+      "mean_confidence": 0.99615119848237,
+      "accuracy": 1.0
+     },
+     {
+      "n": 166,
+      "mean_confidence": 0.9985411406023114,
+      "accuracy": 1.0
+     }
+    ],
+    "monotonicity_kendall_tau": 0.27984078555615854,
+    "monotonicity_ci95": [
+     0.248836959723184,
+     0.3084304969906052
+    ],
+    "monotone": true,
+    "rule": "monotone if the cluster-bootstrap 95% CI of Kendall tau-b between |p - 0.5| and the hit is above 0"
+   },
+   "confidence_auroc": {
+    "auroc": 0.8823618307426597,
+    "ci95": [
+     0.8541787629471431,
+     0.9101436271923147
+    ],
+    "label": "descriptive"
+   },
+   "ece": {
+    "debiased_ece": 0.009287195990426584,
+    "ci95": [
+     0.0,
+     0.04720526742155577
+    ],
+    "n": 1664,
+    "label": "descriptive"
+   }
+  },
+  "familiarity": {
+   "slope_hit_on_familiarity": 0.009031378967802709,
+   "n": 1664,
+   "accuracy_below_median": 0.921875,
+   "gated": false
+  },
+  "hierarchy_stopped_at": "S2",
+  "F1": {
+   "label": "provisional; after the hierarchy, never gated",
+   "arms": {
+    "opus_5_5_zero_shot": {
+     "n_tests": 2110,
+     "lens_accuracy": 0.49928909952606637,
+     "arm_accuracy": 0.3566350710900474,
+     "chance": 0.25213723217277717,
+     "arm_L": 0.13972862858364962,
+     "lens_minus_arm": 0.14265402843601896,
+     "ci95": [
+      0.11824644549763033,
+      0.1663684834123222
+     ],
+     "lens_beats_arm": true,
+     "recognition_probe": {
+      "n_probe_tests": 300,
+      "recognised_share": 0.0033333333333333335,
+      "named_arm_won_share": 1.0
+     }
+    },
+    "sonnet_5_5_zero_shot": {
+     "n_tests": 2110,
+     "lens_accuracy": 0.49928909952606637,
+     "arm_accuracy": 0.34510475438200555,
+     "chance": 0.25213723217277717,
+     "arm_L": 0.12431093806063959,
+     "lens_minus_arm": 0.1541843451440608,
+     "ci95": [
+      0.13106624727300084,
+      0.17791456499661473
+     ],
+     "lens_beats_arm": true,
+     "recognition_probe": {
+      "n_probe_tests": 300,
+      "recognised_share": 0.006666666666666667,
+      "named_arm_won_share": 0.5
+     }
+    }
+   }
+  },
+  "meta": {
+   "config_id": "stage9-holdout-v2",
+   "config_sha256": "53933780bf8f695821c3fee2613f04299f2a2cf86550295c5d326e22e9e7a993",
+   "ledger_head": "593b7996e52d4a3146e170948211cd70c258d2e84be74171bf23b7411702282f",
+   "prereg_checks_passed": 147,
+   "n_pairs": 6875,
+   "n_arms": 9324,
+   "n_predictions_without_outcome": 10887,
+   "n_boot": 2000,
+   "seed": 9000,
+   "c98_fit": {
+    "fit_sha256": "6f2708de0aba0e7f4295924666e3c035556e4efc009a13d070c2585e124fb97f",
+    "n_fit": 8664,
+    "t98_full": 0.41,
+    "t98_base": 0.41
+   }
+  },
+  "label": {
+   "label": "provisional",
+   "rule": "provisional while the post-Opus-cutoff (June 2026) set has fewer than 100 decided pairs",
+   "post_cutoff_decided_pairs_at_sealing": 12,
+   "note": "lifted only by a separate report from the prospective ledger, never by editing these results"
+  }
+ }
+}
