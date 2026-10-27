@@ -17,6 +17,8 @@ The lines were first published on those dates in the project's own records. This
 | 2026-10-23 22:55 | stack-gate | stack-gate-prereg | `a8d1e17f6bf21fc4a46744ec03fdbc085adfb8e4385302a61b7d6d4515ae939e` | entry 1 of engine/experiments/stack_gate/ledger.sqlite |
 | 2026-10-23 22:55 | stack-gate | stack-gate-final-head | `55a8701c7e2105aa8e84ee35fa16220c8957598f596f1887367683cc1a07e6a7` | last entry of engine/experiments/stack_gate/ledger.sqlite |
 | 2026-10-23 22:55 | stack-gate refit_nf4r | stack-gate-final-head | `7035e628eaa8dfe37dc35feb2ad8a4f7cb1973dbc7a0f2ba476e45fef057101e` | last entry of engine/experiments/stack_gate/refit_nf4r/ledger.sqlite |
+| 2026-10-27 10:41 | stage9-f1-openai-addendum | f1-openai-prereg | `ec1b8a119c87fa80829a6565666020e185b1e6998d7805c62b6e24ad49b28aa7` | sha256 of research/stage9/F1_OPENAI_ADDENDUM_PREREG.md |
+| 2026-10-27 10:41 | stage9-f1-openai-addendum | f1-openai-prereg-head | `4eb9b89b54ac327292f49d8c856342460e1ff94f3af6f0e7c8e5d5260000aa0f` | entry 1 of engine/experiments/stage9/f1_openai/ledger.sqlite |
 
 **Superseded on 2026-10-23.** The two `stage9-holdout-v1` lines were sealed and then superseded the same day, before any paid call and before any outcome was read. The spending cap in package v1 was set on the worst case, and that cap blocked the text-only collection step. The owner chose to cap spending by actual spend instead, which is section 0c of package v2. The v1 package, config and ledger are kept here so that the v1 lines stay checkable. The run continued as `stage9-holdout-v2`, and every result in this repository comes from v2.
 
@@ -26,4 +28,5 @@ The lines were first published on those dates in the project's own records. This
 - `config`: the frozen config, published right after it was sealed as entry 1 of the run's ledger and before any prediction.
 - `predictions-head`: the ledger head after every prediction was sealed and before any outcome was joined.
 - `final-head`: the ledger head after the outcomes were joined.
+- `f1-openai-prereg` and `f1-openai-prereg-head`: a post-publication addendum that adds three OpenAI models as frontier arms on the same Stage 9 tests. The first is the sha256 of its pre-registration. The second is entry 1 of its own ledger, which seals that pre-registration. Both were published before any OpenAI call. The published Stage 9 files are only read by it.
 - `stack-gate-prereg` and `stack-gate-final-head`: the sealed start and end of the earlier stack gate run that chose the model, and of its refit (`refit_nf4r`), which is the model Stage 9 used.

@@ -34,7 +34,9 @@ LEDGER = {"stage9-holdout-v1": "engine/experiments/stage9/_archive/2026-10-23_fi
           "stage9-holdout-v2": "engine/experiments/stage9/ledger.sqlite",
           "stack-gate": "engine/experiments/stack_gate/ledger.sqlite",
           "stack-gate refit_nf4r": "engine/experiments/stack_gate/refit_nf4r/ledger.sqlite",
-          "stage9 gpu pass": "engine/experiments/stage9/gpu_pass/ledger.sqlite"}
+          "stage9 gpu pass": "engine/experiments/stage9/gpu_pass/ledger.sqlite",
+          "stage9-f1-openai-addendum": "engine/experiments/stage9/f1_openai/ledger.sqlite"}
+PREREG_FILE = {"stage9-f1-openai-addendum": "research/stage9/F1_OPENAI_ADDENDUM_PREREG.md"}
 RESULTS = "research/stage9/results.json"
 REPORT = "research/stage9/REPORT.md"
 ADDENDUM = "research/stage9/REPORT_F1_ADDENDUM.md"
@@ -66,7 +68,7 @@ def ro(path: str) -> sqlite3.Connection:
 def hash_rows() -> list[dict]:
     rows = []
     for line in HASHES.read_text().splitlines():
-        m = re.match(r"\|\s*(\d{4}-\d\d-\d\d \d\d:\d\d)\s*\|\s*([^|]+?)\s*\|\s*([a-z-]+)\s*\|"
+        m = re.match(r"\|\s*(\d{4}-\d\d-\d\d \d\d:\d\d)\s*\|\s*([^|]+?)\s*\|\s*([a-z0-9-]+)\s*\|"
                      r"\s*`([0-9a-f]{64})`\s*\|", line)
         if m:
             rows.append({"date": m[1], "run": m[2], "type": m[3], "sha": m[4]})
@@ -93,12 +95,21 @@ def step0_files() -> None:
 def step1_published_hashes() -> None:
     print("\n1. Every published hash matches the file or ledger entry it names")
     rows = hash_rows()
-    check(len(rows) == 9, f"{len(rows)} published lines read from docs/track-record/HASHES.md")
+    check(len(rows) >= 11, f"{len(rows)} published lines read from docs/track-record/HASHES.md")
     for r in rows:
         run, typ, want = r["run"], r["type"], r["sha"]
         label = f"{r['date']} {run} {typ} {want[:12]}..."
         if typ == "package":
             check(sha256(ROOT / PKG[run]) == want, f"{label} = sha256 of {PKG[run]}")
+        elif typ == "f1-openai-prereg":
+            check(sha256(ROOT / PREREG_FILE[run]) == want, f"{label} = sha256 of {PREREG_FILE[run]}")
+        elif typ == "f1-openai-prereg-head":
+            con = ro(LEDGER[run])
+            row = con.execute("SELECT hash, ref, payload FROM ledger WHERE seq = 1").fetchone()
+            con.close()
+            check(bool(row) and row[0] == want and row[1] == "f1oa:PREREG"
+                  and json.loads(row[2]).get("prereg_sha256") == sha256(ROOT / PREREG_FILE[run]),
+                  f"{label} is entry 1 (f1oa:PREREG) of {LEDGER[run]} and seals {PREREG_FILE[run]}")
         elif typ == "config":
             check(sha256(ROOT / CONFIG[run]) == want, f"{label} = sha256 of {CONFIG[run]}")
         elif typ in ("predictions-head", "final-head", "stack-gate-prereg", "stack-gate-final-head"):

@@ -15,6 +15,7 @@ Every file in this repository, with the reason it is here. Hashes are SHA-256. F
 | `engine/experiments/stage9/FROZEN_CONFIG.json` *copied* | `53933780bf8f6958...` | The frozen Stage 9 v2 config. |
 | `engine/experiments/stage9/_archive/2026-10-23_first_seal/FROZEN_CONFIG_v1.json` *copied* | `b755abe15e295c71...` | The superseded v1 config, so the v1 config line stays checkable. |
 | `engine/experiments/stage9/_archive/2026-10-23_first_seal/stage9_ledger.sqlite` *copied* | `e5a7dcd2114f2fbe...` | The superseded v1 ledger (one entry, the v1 config seal). |
+| `engine/experiments/stage9/f1_openai/ledger.sqlite` *copied* | `1494dfd1d5191413...` | The OpenAI F1 addendum's own ledger. Entry 1 seals its pre-registration. Later entries are added as the run goes. |
 | `engine/experiments/stage9/gpu_pass/ledger.sqlite` *copied* | `50608c99023aa0c1...` | The Stage 9 GPU pass ledger (a manifest entry). Its head is named in the predictions manifest. |
 | `engine/experiments/stage9/ledger.sqlite` *copied* | `1c6e8f218f4615b8...` | The Stage 9 v2 ledger: config seal, every prediction, the manifest, every outcome. |
 | `engine/lens_engine/__init__.py` *copied* | `a7baa3e41b660b67...` | Empty package marker. |
@@ -40,6 +41,7 @@ Every file in this repository, with the reason it is here. Hashes are SHA-256. F
 | `research/accuracy/PREREG_PACKAGE_v1.md` *copied* | `cd5c6a8cfe7d9226...` | Signed pre-registration package v1 (superseded the same day, kept so its published line stays checkable). |
 | `research/accuracy/PREREG_PACKAGE_v2.md` *copied* | `9ffcd70a04f8b0d4...` | Signed pre-registration package v2. Its manifest block is the source of verify/PREREG_PUBLIC_SUBSET.md. |
 | `research/stage9/AMEND_text_only_precollection.json` *copied* | `c404390fcc83ce82...` | Sealed amendment with the arm rule and spend rule (a manifest entry). |
+| `research/stage9/F1_OPENAI_ADDENDUM_PREREG.md` *copied* | `ec1b8a119c87fa80...` | Pre-registration of the post-publication OpenAI F1 addendum, published before any OpenAI call. |
 | `research/stage9/REPORT.md` *copied* | `061e3ac13ecf3bb3...` | The published Stage 9 report. |
 | `research/stage9/REPORT_F1_ADDENDUM.md` *copied* | `66cc2ad921e013ef...` | The 2026-10-24 addendum with the frontier-model block. |
 | `research/stage9/bridge_set.json` *copied* | `ee0f60589b982277...` | Sealed list of non-holdout pair ids for the model-change bridge set (a manifest entry). Derived from Upworthy. |
