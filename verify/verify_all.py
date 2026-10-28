@@ -37,6 +37,7 @@ LEDGER = {"stage9-holdout-v1": "engine/experiments/stage9/_archive/2026-10-23_fi
           "stage9 gpu pass": "engine/experiments/stage9/gpu_pass/ledger.sqlite",
           "stage9-f1-openai-addendum": "engine/experiments/stage9/f1_openai/ledger.sqlite"}
 PREREG_FILE = {"stage9-f1-openai-addendum": "research/stage9/F1_OPENAI_ADDENDUM_PREREG.md"}
+RESULTS_FILE = {"stage9-f1-openai-addendum": "research/stage9/results_f1_openai.json"}
 RESULTS = "research/stage9/results.json"
 REPORT = "research/stage9/REPORT.md"
 ADDENDUM = "research/stage9/REPORT_F1_ADDENDUM.md"
@@ -95,7 +96,7 @@ def step0_files() -> None:
 def step1_published_hashes() -> None:
     print("\n1. Every published hash matches the file or ledger entry it names")
     rows = hash_rows()
-    check(len(rows) >= 11, f"{len(rows)} published lines read from docs/track-record/HASHES.md")
+    check(len(rows) >= 12, f"{len(rows)} published lines read from docs/track-record/HASHES.md")
     for r in rows:
         run, typ, want = r["run"], r["type"], r["sha"]
         label = f"{r['date']} {run} {typ} {want[:12]}..."
@@ -110,6 +111,13 @@ def step1_published_hashes() -> None:
             check(bool(row) and row[0] == want and row[1] == "f1oa:PREREG"
                   and json.loads(row[2]).get("prereg_sha256") == sha256(ROOT / PREREG_FILE[run]),
                   f"{label} is entry 1 (f1oa:PREREG) of {LEDGER[run]} and seals {PREREG_FILE[run]}")
+        elif typ == "f1-openai-final-head":
+            con = ro(LEDGER[run])
+            row = con.execute("SELECT hash, ref, payload FROM ledger ORDER BY seq DESC LIMIT 1").fetchone()
+            con.close()
+            check(bool(row) and row[0] == want and row[1] == "f1oa:RESULTS"
+                  and json.loads(row[2]).get("results_sha256") == sha256(ROOT / RESULTS_FILE[run]),
+                  f"{label} is the last entry (f1oa:RESULTS) of {LEDGER[run]} and seals {RESULTS_FILE[run]}")
         elif typ == "config":
             check(sha256(ROOT / CONFIG[run]) == want, f"{label} = sha256 of {CONFIG[run]}")
         elif typ in ("predictions-head", "final-head", "stack-gate-prereg", "stack-gate-final-head"):

@@ -32,6 +32,8 @@ So the claims that stand are P and S1. The describe call (S2) failed and was dro
 
 An addendum written on 2026-10-24 adds a block the report left out: two frontier models given the same tests with no training. Lens picked the best headline 49.9% of the time. Opus 5.5 did so 35.7% of the time and Sonnet 5.5 34.5%. This block sits after the fixed order and is never gated. It was rendered from the unchanged published results file.
 
+A second addendum, run on 2026-10-27 and 2026-10-28, adds three OpenAI models on the same tests with the same prompts. It was pre-registered and sealed in its own ledger before any OpenAI call. GPT-6.1 Terra picked the best headline 36.8% of the time, GPT-6.1 Sol 37.3% and GPT-6 Astra 37.8%. Lens beats each of them, with the 95% CI of the gap above zero in every case. The full text is in [`research/stage9/REPORT_F1_OPENAI_ADDENDUM.md`](research/stage9/REPORT_F1_OPENAI_ADDENDUM.md).
+
 The full text is in [`research/stage9/REPORT.md`](research/stage9/REPORT.md) and [`research/stage9/REPORT_F1_ADDENDUM.md`](research/stage9/REPORT_F1_ADDENDUM.md). The published hashes are in [`docs/track-record/HASHES.md`](docs/track-record/HASHES.md). Every file in this repository is listed in [`MANIFEST.md`](MANIFEST.md) with its hash and the reason it is here.
 
 ## How to verify it
