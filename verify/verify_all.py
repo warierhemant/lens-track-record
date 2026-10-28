@@ -38,6 +38,8 @@ LEDGER = {"stage9-holdout-v1": "engine/experiments/stage9/_archive/2026-10-23_fi
           "stage9-f1-openai-addendum": "engine/experiments/stage9/f1_openai/ledger.sqlite"}
 PREREG_FILE = {"stage9-f1-openai-addendum": "research/stage9/F1_OPENAI_ADDENDUM_PREREG.md"}
 RESULTS_FILE = {"stage9-f1-openai-addendum": "research/stage9/results_f1_openai.json"}
+ARXIV399 = {"arxiv399-prereg": "research/stage9/ARXIV399_PREREG.md",
+            "arxiv399-prereg-head": "engine/experiments/stage9/arxiv399/ledger.sqlite"}
 RESULTS = "research/stage9/results.json"
 REPORT = "research/stage9/REPORT.md"
 ADDENDUM = "research/stage9/REPORT_F1_ADDENDUM.md"
@@ -136,6 +138,19 @@ def step1_published_hashes() -> None:
                 check(bool(hit) and hit[0] == 1, f"{label} is entry 1 of {path}")
             else:
                 check(bool(hit) and hit[0] == last, f"{label} is the last entry (head) of {path}")
+        elif typ in ("arxiv399-prereg", "arxiv399-prereg-head"):
+            f = ROOT / ARXIV399[typ]
+            if f.exists():
+                if typ == "arxiv399-prereg":
+                    check(sha256(f) == want, f"{label} = sha256 of {ARXIV399[typ]}")
+                else:
+                    con = ro(ARXIV399[typ])
+                    row = con.execute("SELECT hash, ref FROM ledger WHERE seq = 1").fetchone()
+                    con.close()
+                    check(bool(row) and row[0] == want and row[1] == "ax399:PREREG",
+                          f"{label} is entry 1 (ax399:PREREG) of {ARXIV399[typ]}")
+            else:
+                print(f"NOTE  {label}: hash only for now, {ARXIV399[typ]} is published with the results")
         else:
             check(False, f"{label}: unknown line type")
 
