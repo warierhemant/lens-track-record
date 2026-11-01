@@ -35,9 +35,11 @@ LEDGER = {"stage9-holdout-v1": "engine/experiments/stage9/_archive/2026-10-23_fi
           "stack-gate": "engine/experiments/stack_gate/ledger.sqlite",
           "stack-gate refit_nf4r": "engine/experiments/stack_gate/refit_nf4r/ledger.sqlite",
           "stage9 gpu pass": "engine/experiments/stage9/gpu_pass/ledger.sqlite",
-          "stage9-f1-openai-addendum": "engine/experiments/stage9/f1_openai/ledger.sqlite"}
+          "stage9-f1-openai-addendum": "engine/experiments/stage9/f1_openai/ledger.sqlite",
+          "stage9-mirofish-addendum": "engine/experiments/stage9/mirofish/ledger.sqlite"}
 PREREG_FILE = {"stage9-f1-openai-addendum": "research/stage9/F1_OPENAI_ADDENDUM_PREREG.md"}
-RESULTS_FILE = {"stage9-f1-openai-addendum": "research/stage9/results_f1_openai.json"}
+RESULTS_FILE = {"stage9-f1-openai-addendum": "research/stage9/results_f1_openai.json",
+                "stage9-mirofish-addendum": "research/stage9/results_mirofish.json"}
 ARXIV399 = {"arxiv399-prereg": "research/stage9/ARXIV399_PREREG.md",
             "arxiv399-prereg-head": "engine/experiments/stage9/arxiv399/ledger.sqlite"}
 MIROFISH = {"mirofish-prereg": "research/stage9/MIROFISH_PREREG.md",
@@ -100,7 +102,7 @@ def step0_files() -> None:
 def step1_published_hashes() -> None:
     print("\n1. Every published hash matches the file or ledger entry it names")
     rows = hash_rows()
-    check(len(rows) >= 12, f"{len(rows)} published lines read from docs/track-record/HASHES.md")
+    check(len(rows) >= 17, f"{len(rows)} published lines read from docs/track-record/HASHES.md")
     for r in rows:
         run, typ, want = r["run"], r["type"], r["sha"]
         label = f"{r['date']} {run} {typ} {want[:12]}..."
@@ -160,12 +162,21 @@ def step1_published_hashes() -> None:
                     check(sha256(f) == want, f"{label} = sha256 of {MIROFISH[typ]}")
                 else:
                     con = ro(MIROFISH[typ])
-                    row = con.execute("SELECT hash, ref FROM ledger WHERE seq = 1").fetchone()
+                    row = con.execute("SELECT hash, ref, payload FROM ledger WHERE seq = 1").fetchone()
                     con.close()
-                    check(bool(row) and row[0] == want and row[1] == "mirofish:PREREG",
-                          f"{label} is entry 1 (mirofish:PREREG) of {MIROFISH[typ]}")
+                    check(bool(row) and row[0] == want and row[1] == "mirofish:PREREG"
+                          and json.loads(row[2]).get("prereg_sha256") == sha256(ROOT / MIROFISH["mirofish-prereg"]),
+                          f"{label} is entry 1 (mirofish:PREREG) of {MIROFISH[typ]} and seals "
+                          f"{MIROFISH['mirofish-prereg']}")
             else:
                 print(f"NOTE  {label}: hash only for now, {MIROFISH[typ]} is published with the results")
+        elif typ == "mirofish-final-head":
+            con = ro(LEDGER[run])
+            row = con.execute("SELECT hash, ref, payload FROM ledger ORDER BY seq DESC LIMIT 1").fetchone()
+            con.close()
+            check(bool(row) and row[0] == want and row[1] == "mirofish:RESULTS"
+                  and json.loads(row[2]).get("results_sha256") == sha256(ROOT / RESULTS_FILE[run]),
+                  f"{label} is the last entry (mirofish:RESULTS) of {LEDGER[run]} and seals {RESULTS_FILE[run]}")
         else:
             check(False, f"{label}: unknown line type")
 

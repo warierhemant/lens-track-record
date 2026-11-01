@@ -1,0 +1,314 @@
+{
+ "addendum": "MiroFish swarm arm, post-publication (2026-10-29)",
+ "label": "post-publication addendum, provisional, after the Stage 9 hierarchy, never gated",
+ "ledger_head": "9b3c71f436dc258e8fc6643348daf56a2a743aaddc17274ed1265d060f7384a6",
+ "prereg_sha256": "c4b50da92d989a1c8e87fd9f7b4f9c5c60a0161050ce6b67512658604ae70b37",
+ "predictions_sha256": "bd37103d8a6732140781eb177f7dfa5cca87cd98fe617092bcfec2fdb469f98b",
+ "harness_sha256": "2c7d90be004bd0d2fa8c3da26a541377ff18af7f4b611120cb9f209fd254a1fd",
+ "mirofish_commit": "7657031ac01184afe2cb220f5ee3545573b5e843",
+ "model": "gpt-4o-mini",
+ "stage9_final_head": "593b7996e52d4a3146e170948211cd70c258d2e84be74171bf23b7411702282f",
+ "f1oa_final_head": "dfd57e615ece4accb05ef5f3bd2db68910b7bf896fa60fdcdf3d1dbb4f6c0572",
+ "n_sample": 150,
+ "n_excluded_over_5": 454,
+ "n_eligible": 1656,
+ "cap_usd": 15.0,
+ "actual_usd": 9.793897,
+ "stop_reason": null,
+ "n_not_run": 0,
+ "parse_counts": {
+  "cannot_tell": 0,
+  "invalid": 1,
+  "pick": 147
+ },
+ "second_terra_arm": "not run in this addendum (owner, 2026-10-29)",
+ "scoring_rule": "lens.stage9.mirofish.score/1: scored tests are those that ran (final done or failed). MiroFish hit = 1 when its pick is a best arm (Stage 9 is_best), else 0; cannot tell, invalid and failed score 0, and so does a pick of an arm the outcome read dropped (counted). Lens and the frontier arms: Stage 9 best-of-k hits (ties in score split credit). Chance = mean 1/k, k = the arms the outcome read kept. L = (rate - chance) / (1 - chance). 95% percentile cluster bootstrap by test, 2,000 resamples, seed 9000, for each rate, each L and each paired difference (other arm minus MiroFish).",
+ "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+ "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+ "frontier_reproduced_all_tests": {
+  "gpt_6_1_sol_zero_shot": {
+   "n_tests": 2110,
+   "lens_accuracy": 0.49928909952606637,
+   "arm_accuracy": 0.3732227488151659,
+   "chance": 0.25213723217277717,
+   "arm_L": 0.16190873760727562,
+   "lens_minus_arm": 0.12606635071090047,
+   "ci95": [
+    0.1037914691943128,
+    0.14834715639810425
+   ],
+   "lens_beats_arm": true,
+   "recognition_probe": {
+    "n_probe_tests": 300,
+    "recognised_share": 0.0033333333333333335,
+    "named_arm_won_share": 0.0
+   }
+  },
+  "gpt_6_1_terra_zero_shot": {
+   "n_tests": 2110,
+   "lens_accuracy": 0.49928909952606637,
+   "arm_accuracy": 0.3675355450236967,
+   "chance": 0.25213723217277717,
+   "arm_L": 0.15430412879917527,
+   "lens_minus_arm": 0.13175355450236967,
+   "ci95": [
+    0.10899881516587678,
+    0.15450236966824646
+   ],
+   "lens_beats_arm": true,
+   "recognition_probe": {
+    "n_probe_tests": 300,
+    "recognised_share": 0.006666666666666667,
+    "named_arm_won_share": 0.0
+   }
+  },
+  "gpt_6_astra_zero_shot": {
+   "n_tests": 2110,
+   "lens_accuracy": 0.49928909952606637,
+   "arm_accuracy": 0.37843601895734597,
+   "chance": 0.25213723217277717,
+   "arm_L": 0.1688796290147009,
+   "lens_minus_arm": 0.12085308056872038,
+   "ci95": [
+    0.09833530805687205,
+    0.1438447867298578
+   ],
+   "lens_beats_arm": true,
+   "recognition_probe": {
+    "n_probe_tests": 300,
+    "recognised_share": 0.0,
+    "named_arm_won_share": null
+   }
+  },
+  "opus_5_5_zero_shot": {
+   "n_tests": 2110,
+   "lens_accuracy": 0.49928909952606637,
+   "arm_accuracy": 0.3566350710900474,
+   "chance": 0.25213723217277717,
+   "arm_L": 0.13972862858364962,
+   "lens_minus_arm": 0.14265402843601896,
+   "ci95": [
+    0.11824644549763033,
+    0.1663684834123222
+   ],
+   "lens_beats_arm": true,
+   "recognition_probe": {
+    "n_probe_tests": 300,
+    "recognised_share": 0.0033333333333333335,
+    "named_arm_won_share": 1.0
+   }
+  },
+  "sonnet_5_5_zero_shot": {
+   "n_tests": 2110,
+   "lens_accuracy": 0.49928909952606637,
+   "arm_accuracy": 0.34510475438200555,
+   "chance": 0.25213723217277717,
+   "arm_L": 0.12431093806063959,
+   "lens_minus_arm": 0.1541843451440608,
+   "ci95": [
+    0.13106624727300084,
+    0.17791456499661473
+   ],
+   "lens_beats_arm": true,
+   "recognition_probe": {
+    "n_probe_tests": 300,
+    "recognised_share": 0.006666666666666667,
+    "named_arm_won_share": 0.5
+   }
+  }
+ },
+ "n_scored_tests": 150,
+ "n_pick_off_record": 0,
+ "mirofish": {
+  "n_tests": 150,
+  "pick_rate": 0.2866666666666667,
+  "ci95": [
+   0.22,
+   0.36
+  ],
+  "chance": 0.2773333333333333,
+  "L": 0.01291512915129155,
+  "L_ci95": [
+   -0.08126583690139937,
+   0.11193582397419462
+  ],
+  "n_pick_off_record": 0
+ },
+ "lens": {
+  "n_tests": 150,
+  "pick_rate": 0.5333333333333333,
+  "ci95": [
+   0.44666666666666666,
+   0.6066666666666667
+  ],
+  "chance": 0.2773333333333333,
+  "L": 0.35424354243542433,
+  "L_ci95": [
+   0.23785739853669557,
+   0.45921792553323254
+  ]
+ },
+ "comparisons": {
+  "lens": {
+   "minus_mirofish": 0.24666666666666667,
+   "ci95": [
+    0.14,
+    0.3466666666666667
+   ],
+   "above_mirofish": true,
+   "below_mirofish": false,
+   "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+   "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+   "primary": true
+  },
+  "opus_5_5_zero_shot": {
+   "minus_mirofish": 0.08333333333333333,
+   "ci95": [
+    -0.016666666666666666,
+    0.18
+   ],
+   "above_mirofish": false,
+   "below_mirofish": false,
+   "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+   "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+   "primary": false
+  },
+  "sonnet_5_5_zero_shot": {
+   "minus_mirofish": 0.04100000000000001,
+   "ci95": [
+    -0.06004999999999999,
+    0.13599999999999998
+   ],
+   "above_mirofish": false,
+   "below_mirofish": false,
+   "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+   "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+   "primary": false
+  },
+  "gpt_6_1_terra_zero_shot": {
+   "minus_mirofish": 0.08,
+   "ci95": [
+    -0.02,
+    0.17333333333333334
+   ],
+   "above_mirofish": false,
+   "below_mirofish": false,
+   "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+   "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+   "primary": false
+  },
+  "gpt_6_1_sol_zero_shot": {
+   "minus_mirofish": 0.09666666666666666,
+   "ci95": [
+    -0.0033333333333333335,
+    0.18666666666666668
+   ],
+   "above_mirofish": false,
+   "below_mirofish": false,
+   "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+   "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+   "primary": false
+  },
+  "gpt_6_astra_zero_shot": {
+   "minus_mirofish": 0.10333333333333333,
+   "ci95": [
+    0.006666666666666667,
+    0.19333333333333333
+   ],
+   "above_mirofish": true,
+   "below_mirofish": false,
+   "order_note": "MiroFish saw one fixed order per test and its pick scores 1 or 0. The F1 arms saw two orders and scored 0.5 per order.",
+   "credit_note": "A MiroFish test with no valid pick scores 0, and a valid MiroFish pick of an arm the Stage 9 outcome read dropped scores 0 and is counted in n_pick_off_record. In both cases an F1 arm gets chance credit, because best_of_k_hits splits a tie among the kept arms. Chance uses k = the arms the outcome read kept, which can be fewer than the versions MiroFish was shown.",
+   "primary": true
+  }
+ },
+ "frontier": {
+  "opus_5_5_zero_shot": {
+   "n_tests": 150,
+   "pick_rate": 0.37,
+   "ci95": [
+    0.3,
+    0.4367499999999995
+   ],
+   "chance": 0.2773333333333333,
+   "L": 0.1282287822878229,
+   "L_ci95": [
+    0.03314256578964346,
+    0.22070557541957006
+   ]
+  },
+  "sonnet_5_5_zero_shot": {
+   "n_tests": 150,
+   "pick_rate": 0.3276666666666667,
+   "ci95": [
+    0.2626583333333334,
+    0.39501666666666657
+   ],
+   "chance": 0.2773333333333333,
+   "L": 0.06964944649446503,
+   "L_ci95": [
+    -0.02277139444176541,
+    0.1600634479834194
+   ]
+  },
+  "gpt_6_1_terra_zero_shot": {
+   "n_tests": 150,
+   "pick_rate": 0.36666666666666664,
+   "ci95": [
+    0.29333333333333333,
+    0.43333333333333335
+   ],
+   "chance": 0.2773333333333333,
+   "L": 0.1236162361623616,
+   "L_ci95": [
+    0.02732431664250414,
+    0.21679970993077943
+   ]
+  },
+  "gpt_6_1_sol_zero_shot": {
+   "n_tests": 150,
+   "pick_rate": 0.38333333333333336,
+   "ci95": [
+    0.31666666666666665,
+    0.44674999999999954
+   ],
+   "chance": 0.2773333333333333,
+   "L": 0.14667896678966794,
+   "L_ci95": [
+    0.0567448489408497,
+    0.23399110959553196
+   ]
+  },
+  "gpt_6_astra_zero_shot": {
+   "n_tests": 150,
+   "pick_rate": 0.39,
+   "ci95": [
+    0.3233333333333333,
+    0.45666666666666667
+   ],
+   "chance": 0.2773333333333333,
+   "L": 0.15590405904059043,
+   "L_ci95": [
+    0.06410797011447089,
+    0.24499283397865415
+   ]
+  }
+ },
+ "secondary": {
+  "label": "secondary, never gated",
+  "pick_rate_answered_only": 0.2925170068027211,
+  "n_answered": 147,
+  "n_cannot_tell": 0,
+  "n_invalid": 1,
+  "cannot_tell_rate": 0.0,
+  "invalid_rate": 0.006666666666666667,
+  "n_failed": 2,
+  "failed_by_stage": {
+   "ontology": 1,
+   "report": 1
+  },
+  "mean_agents_per_test": 6.1891891891891895,
+  "mean_rounds_run": 23.716216216216218,
+  "mean_usd_per_test": 0.06474115333333334
+ }
+}
