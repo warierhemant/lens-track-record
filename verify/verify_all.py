@@ -128,6 +128,13 @@ def step1_published_hashes() -> None:
             check(bool(row) and row[0] == want and row[1] == "f1oa:PREREG"
                   and json.loads(row[2]).get("prereg_sha256") == sha256(ROOT / PREREG_FILE[run]),
                   f"{label} is entry 1 (f1oa:PREREG) of {LEDGER[run]} and seals {PREREG_FILE[run]}")
+        elif typ == "f1-fable-final-head":
+            con = ro(LEDGER[run])
+            row = con.execute("SELECT hash, ref, payload FROM ledger ORDER BY seq DESC LIMIT 1").fetchone()
+            con.close()
+            check(bool(row) and row[0] == want and row[1] == "f1fa:RESULTS"
+                  and json.loads(row[2]).get("results_sha256") == sha256(ROOT / "research/stage9/results_f1_fable.json"),
+                  f"{label} is the last entry (f1fa:RESULTS) of {LEDGER[run]} and seals the results file")
         elif typ == "f1-openai-final-head":
             con = ro(LEDGER[run])
             row = con.execute("SELECT hash, ref, payload FROM ledger ORDER BY seq DESC LIMIT 1").fetchone()

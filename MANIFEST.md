@@ -15,7 +15,7 @@ Every file in this repository, with the reason it is here. Hashes are SHA-256. F
 | `engine/experiments/stage9/FROZEN_CONFIG.json` *copied* | `53933780bf8f6958...` | The frozen Stage 9 v2 config. |
 | `engine/experiments/stage9/_archive/2026-10-23_first_seal/FROZEN_CONFIG_v1.json` *copied* | `b755abe15e295c71...` | The superseded v1 config, so the v1 config line stays checkable. |
 | `engine/experiments/stage9/_archive/2026-10-23_first_seal/stage9_ledger.sqlite` *copied* | `e5a7dcd2114f2fbe...` | The superseded v1 ledger (one entry, the v1 config seal). |
-| `engine/experiments/stage9/f1_fable/ledger.sqlite` *copied* | `d21b4d27a0058ef6...` | The Fable 5.1 addendum's own ledger. Entry 1 seals its pre-registration. Later entries are added as the run goes. |
+| `engine/experiments/stage9/f1_fable/ledger.sqlite` *copied* | `06e55b96792cac72...` | The Fable 5.1 addendum's own ledger. Entry 1 seals its pre-registration. Later entries are added as the run goes. |
 | `engine/experiments/stage9/f1_openai/ledger.sqlite` *copied* | `3bcbe48d67e10cb7...` | The OpenAI F1 addendum's own ledger: the pre-registration seal, every batch decision and spend, every parsed answer, and the results seal. |
 | `engine/experiments/stage9/gpu_pass/ledger.sqlite` *copied* | `50608c99023aa0c1...` | The Stage 9 GPU pass ledger (a manifest entry). Its head is named in the predictions manifest. |
 | `engine/experiments/stage9/mirofish/ledger.sqlite` *copied* | `d31f307497a8669b...` | The MiroFish addendum's own ledger: the pre-registration seal, the predictions seal and the results seal. The predictions file it names stays private because it holds raw replies. |
@@ -46,12 +46,14 @@ Every file in this repository, with the reason it is here. Hashes are SHA-256. F
 | `research/stage9/F1_FABLE_ADDENDUM_PREREG.md` *copied* | `222af630062c2ea6...` | Pre-registration of the post-publication Fable 5.1 addendum, published before any paid call. |
 | `research/stage9/F1_OPENAI_ADDENDUM_PREREG.md` *copied* | `ec1b8a119c87fa80...` | Pre-registration of the post-publication OpenAI F1 addendum, published before any OpenAI call. |
 | `research/stage9/MIROFISH_PREREG.md` *copied* | `c4b50da92d989a1c...` | Pre-registration of the post-publication MiroFish addendum, sealed before any MiroFish call on a holdout test. |
+| `research/stage9/REPORT_F1_FABLE_ADDENDUM.md` *copied* | `9b44618429d51a53...` | The Fable 5.1 addendum report, rendered from its results file. |
 | `research/stage9/REPORT_F1_OPENAI_ADDENDUM.md` *copied* | `3a70ac4fe0a5af6c...` | The OpenAI F1 addendum report, rendered from results_f1_openai.json. |
 | `research/stage9/REPORT_MIROFISH_ADDENDUM.md` *copied* | `ca9758cebbfc7e49...` | The MiroFish addendum report, rendered from results_mirofish.json. |
 | `research/stage9/REPORT.md` *copied* | `061e3ac13ecf3bb3...` | The published Stage 9 report. |
 | `research/stage9/REPORT_F1_ADDENDUM.md` *copied* | `66cc2ad921e013ef...` | The 2026-10-24 addendum with the frontier-model block. |
 | `research/stage9/bridge_set.json` *copied* | `ee0f60589b982277...` | Sealed list of non-holdout pair ids for the model-change bridge set (a manifest entry). Derived from Upworthy. |
 | `research/stage9/results.json` *copied* | `d6c863ba520661b2...` | The published results file the report renders from. |
+| `research/stage9/results_f1_fable.json` *copied* | `0069e7f1aee51c1c...` | The Fable 5.1 addendum results, sealed as the last entry of its ledger. |
 | `research/stage9/results_f1_openai.json` *copied* | `4cc07be2c37a8fdc...` | The OpenAI F1 addendum results, sealed by the addendum ledger's last entry. |
 | `research/stage9/results_mirofish.json` *copied* | `73c65947fb85b1d3...` | The MiroFish addendum results, sealed by the addendum ledger's last entry. |
 | `verify/LARGE_FILES.sha256` | (written for this repository) | sha256 of every ledger, for `shasum -a 256 -c`. |
