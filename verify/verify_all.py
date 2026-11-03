@@ -36,7 +36,8 @@ LEDGER = {"stage9-holdout-v1": "engine/experiments/stage9/_archive/2026-10-23_fi
           "stack-gate refit_nf4r": "engine/experiments/stack_gate/refit_nf4r/ledger.sqlite",
           "stage9 gpu pass": "engine/experiments/stage9/gpu_pass/ledger.sqlite",
           "stage9-f1-openai-addendum": "engine/experiments/stage9/f1_openai/ledger.sqlite",
-          "stage9-mirofish-addendum": "engine/experiments/stage9/mirofish/ledger.sqlite"}
+          "stage9-mirofish-addendum": "engine/experiments/stage9/mirofish/ledger.sqlite",
+          "stage9-f1-fable-addendum": "engine/experiments/stage9/f1_fable/ledger.sqlite"}
 PREREG_FILE = {"stage9-f1-openai-addendum": "research/stage9/F1_OPENAI_ADDENDUM_PREREG.md"}
 RESULTS_FILE = {"stage9-f1-openai-addendum": "research/stage9/results_f1_openai.json",
                 "stage9-mirofish-addendum": "research/stage9/results_mirofish.json"}
@@ -108,6 +109,16 @@ def step1_published_hashes() -> None:
         label = f"{r['date']} {run} {typ} {want[:12]}..."
         if typ == "package":
             check(sha256(ROOT / PKG[run]) == want, f"{label} = sha256 of {PKG[run]}")
+        elif typ == "f1-fable-prereg":
+            check(sha256(ROOT / "research/stage9/F1_FABLE_ADDENDUM_PREREG.md") == want,
+                  f"{label} = sha256 of research/stage9/F1_FABLE_ADDENDUM_PREREG.md")
+        elif typ == "f1-fable-prereg-head":
+            con = ro(LEDGER[run])
+            row = con.execute("SELECT hash, ref, payload FROM ledger WHERE seq = 1").fetchone()
+            con.close()
+            check(bool(row) and row[0] == want and row[1] == "f1fa:PREREG"
+                  and json.loads(row[2]).get("prereg_sha256") == sha256(ROOT / "research/stage9/F1_FABLE_ADDENDUM_PREREG.md"),
+                  f"{label} is entry 1 (f1fa:PREREG) of {LEDGER[run]} and seals the pre-registration")
         elif typ == "f1-openai-prereg":
             check(sha256(ROOT / PREREG_FILE[run]) == want, f"{label} = sha256 of {PREREG_FILE[run]}")
         elif typ == "f1-openai-prereg-head":

@@ -15,6 +15,7 @@ Every file in this repository, with the reason it is here. Hashes are SHA-256. F
 | `engine/experiments/stage9/FROZEN_CONFIG.json` *copied* | `53933780bf8f6958...` | The frozen Stage 9 v2 config. |
 | `engine/experiments/stage9/_archive/2026-10-23_first_seal/FROZEN_CONFIG_v1.json` *copied* | `b755abe15e295c71...` | The superseded v1 config, so the v1 config line stays checkable. |
 | `engine/experiments/stage9/_archive/2026-10-23_first_seal/stage9_ledger.sqlite` *copied* | `e5a7dcd2114f2fbe...` | The superseded v1 ledger (one entry, the v1 config seal). |
+| `engine/experiments/stage9/f1_fable/ledger.sqlite` *copied* | `d21b4d27a0058ef6...` | The Fable 5.1 addendum's own ledger. Entry 1 seals its pre-registration. Later entries are added as the run goes. |
 | `engine/experiments/stage9/f1_openai/ledger.sqlite` *copied* | `3bcbe48d67e10cb7...` | The OpenAI F1 addendum's own ledger: the pre-registration seal, every batch decision and spend, every parsed answer, and the results seal. |
 | `engine/experiments/stage9/gpu_pass/ledger.sqlite` *copied* | `50608c99023aa0c1...` | The Stage 9 GPU pass ledger (a manifest entry). Its head is named in the predictions manifest. |
 | `engine/experiments/stage9/mirofish/ledger.sqlite` *copied* | `d31f307497a8669b...` | The MiroFish addendum's own ledger: the pre-registration seal, the predictions seal and the results seal. The predictions file it names stays private because it holds raw replies. |
@@ -42,6 +43,7 @@ Every file in this repository, with the reason it is here. Hashes are SHA-256. F
 | `research/accuracy/PREREG_PACKAGE_v1.md` *copied* | `cd5c6a8cfe7d9226...` | Signed pre-registration package v1 (superseded the same day, kept so its published line stays checkable). |
 | `research/accuracy/PREREG_PACKAGE_v2.md` *copied* | `9ffcd70a04f8b0d4...` | Signed pre-registration package v2. Its manifest block is the source of verify/PREREG_PUBLIC_SUBSET.md. |
 | `research/stage9/AMEND_text_only_precollection.json` *copied* | `c404390fcc83ce82...` | Sealed amendment with the arm rule and spend rule (a manifest entry). |
+| `research/stage9/F1_FABLE_ADDENDUM_PREREG.md` *copied* | `222af630062c2ea6...` | Pre-registration of the post-publication Fable 5.1 addendum, published before any paid call. |
 | `research/stage9/F1_OPENAI_ADDENDUM_PREREG.md` *copied* | `ec1b8a119c87fa80...` | Pre-registration of the post-publication OpenAI F1 addendum, published before any OpenAI call. |
 | `research/stage9/MIROFISH_PREREG.md` *copied* | `c4b50da92d989a1c...` | Pre-registration of the post-publication MiroFish addendum, sealed before any MiroFish call on a holdout test. |
 | `research/stage9/REPORT_F1_OPENAI_ADDENDUM.md` *copied* | `3a70ac4fe0a5af6c...` | The OpenAI F1 addendum report, rendered from results_f1_openai.json. |
